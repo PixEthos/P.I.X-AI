@@ -1,7 +1,11 @@
 # PixAI
-This is essentially something I am working on. From Basic_AI (something I gave up on) to a new AI, something I am working on, and it's in Go.
 
-What will it feature? 
-- NLP, mostly because why not?
+If you want to see the progress, look here:
+[Development branch](https://github.com/PixEthos/PixAI/tree/master)
 
-It's just to see if I can do this. Lightweight, but capable I suppose. Should be able to release it witin a few months entirely. So long as I can get everything done that I need to.
+When the AI is finished, it will be able to:
+- Generate words/sentences
+- Have basic conversations
+- Have recurrent memory
+
+This isn't an AI for those looking for complete data processing, this is just a FOSS AI I am developing for the sake of it. All from scratch too, with the standard library in Go. No need for me to add int additional data; when none is really required.
