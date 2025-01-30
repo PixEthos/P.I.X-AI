@@ -8,4 +8,4 @@ When the AI is finished, it will be able to:
 - Have basic conversations
 - Have recurrent memory
 
-This isn't an AI for those looking for complete data processing, this is just a FOSS AI I am developing for the sake of it. All from scratch too, with the standard library in Go. No need for me to add int additional data; when none is really required.
+This isn't an AI for those looking for complete data processing, this is just a FOSS AI I am developing for the sake of it. All from scratch too, with the standard library in Go. No need for me to add any additional data; when none is really required.
