@@ -16,6 +16,7 @@ package naturallanguageprocessing
 import (
 	"math"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -186,4 +187,77 @@ func (e *Enumerate) EnumerationSplit(input string) *Enumerate {
 	}
 
 	return &enumerate
+}
+
+// converting to int
+func (e *Enumerate) EnumerationAtoi(input string) int {
+	value := e.num
+	word := e.val
+
+	for i := 0; i < value; i++ {
+		word = append(word, input)
+		for _, x := range word {
+			num, _ := strconv.Atoi(x)
+			value = num
+		}
+	}
+
+	if value != 0 {
+		return value
+	}
+
+	return 0
+}
+
+// converting to string
+func (e *Enumerate) EnumerationItoa(input string) string {
+	value := e.num
+	word := e.val
+
+	var val string 
+	for i := range word {
+		word = append(word, input)
+
+		val = word[i]
+
+		for i := 0; i < len(word); i++ {
+			x := strconv.Itoa(value)
+			val = x
+		}
+	}
+
+	if len(val) != 0 {
+		return val
+	}
+
+	return ""
+}
+
+// enumeration
+func (e *Enumerate) Enumeration(input string) []string {
+	num := e.EnumerationAtoi(input)
+	word := e.EnumerationItoa(input)
+
+	enumerate := make(map[string]int)
+	information := make([]string, len(input))
+	for _, i := range enumerate {
+		_, value := enumerate[word]
+		for value {
+			if i != 0 {
+				information = append(information, strconv.Itoa(num), word)
+				break
+			}
+
+			if i == 0 {
+				break
+			}
+		}
+	}
+
+
+	if num > 0 {
+		return information
+	}
+
+	return nil
 }

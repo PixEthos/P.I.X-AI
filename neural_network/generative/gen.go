@@ -16,45 +16,99 @@ package generative
 // calling variables
 import (
 	"fmt"
+	"math/rand"
 	information "pixai/neural_network"
 	natural "pixai/neural_network/natural_language_processing"
 )
 
-// struct for organization and global control
-type Generative struct{}
-
 // naming vars
 var (
+	tokens    = natural.NLP{}           // tokens
+	enum      = natural.Enumerate{}     // enumeration
 	conv      = natural.Conversion{}    // Conversion variables
 	variables = information.Variables{} // Variables for the neural_network
 	weights   = information.Weights{}   // Randomness and weights
+	neurons   = information.Layers{}    // Input
 )
 
-// predictive punctuation generation
-func (g *Generative) MatchingGeneration(input string) string {
+// array
+type StringArray map[string]int
+
+// struct for organization and global control
+type Generative struct {
+
+	// Markov
+	frequency map[string]StringArray
+	order     int
+}
+
+func (Generative) NewChain(order int) *Generative {
+	chain := Generative{order: order, frequency: make(map[string]StringArray)}
+	return &chain
+}
+
+// chain array
+func (g *Generative) ChainArray(val string, num int) []string {
+	value := make([]string, num)
+	for x := range value {
+		value[x] = val
+	}
+
+	if value != nil {
+		return value
+	}
+
+	return nil
+}
+
+// split
+func (g *Generative) Splitting(input string) string {
+	split := tokens.Document(input)
+
+	words := make(map[string]int)
+	for _, x := range split {
+		_, word := words[x]
+		for word {
+			if len(x) == 0 {
+				break
+			}
+
+			if len(x) > 0 {
+				return x
+			}
+		}
+	}
 
 	return ""
 }
 
-// predictive word generation
-func (g *Generative) PredictiveGeneration(input string) string {
+func (g *Generative) Enum(input string) string {
+	enumerate := enum.Enumeration(input)
+	var x string
+	for _, i := range enumerate {
+		x = i
+	}
+
+	if len(x) != 0 {
+		return x
+	}
 
 	return ""
 }
 
-// structuring sentences
-func (g *Generative) SentenceStructure() string {
-	return ""
+// adding the markov chains
+//                       int, string, []string
+/* Example: chain.Adding(2, input, extracted_input) */
+func (chain *Generative) Adding(n int, input string, sequence []string) {
+	order := rand.Intn(n)
+	s_tokens := chain.ChainArray(input, order)
+	e_tokens := chain.ChainArray(input, order)
+
 }
 
-// paragraph structure
-func (g *Generative) ParagraphStructure() string {
-	return ""
-}
+func (g *Generative) MarkovChains(input string) []string {
 
-// generative outputs
-func (g *Generative) Outputs() string {
-	return ""
+	return nil
 }
 
 // initializing
