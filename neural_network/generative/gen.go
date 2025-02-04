@@ -123,9 +123,11 @@ func (g *Generative) Enum(input string) string {
 func (chain *Generative) Adding(n int, input string) {
 	order := rand.Intn(n)
 
+	// arrays
 	s_tokens := chain.ChainArray(input, order)
 	e_tokens := chain.ChainArray(input, order)
 
+	// combination
 	combined := chain.Concatinate(s_tokens, e_tokens)
 	sequence := make([]string, len(combined))
 	for i := range sequence {
