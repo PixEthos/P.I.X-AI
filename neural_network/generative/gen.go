@@ -61,6 +61,27 @@ func (g *Generative) ChainArray(val string, num int) []string {
 	return nil
 }
 
+// concatinating (ie: Combining)
+func (g *Generative) Concatinate(input1, input2 []string) []string {
+
+	combined := make([]string, len(input1), len(input2))
+	for i := range combined {
+		if i > 0 {
+			combined = append(combined, append(input1, input2...)...)
+		}
+
+		if i == 0 {
+			combined[i] = combined[0]
+		}
+	}
+
+	if combined != nil {
+		return combined
+	}
+
+	return nil
+}
+
 // split
 func (g *Generative) Splitting(input string) string {
 	split := tokens.Document(input)
@@ -99,14 +120,27 @@ func (g *Generative) Enum(input string) string {
 // adding the markov chains
 //                       int, string, []string
 /* Example: chain.Adding(2, input, extracted_input) */
-func (chain *Generative) Adding(n int, input string, sequence []string) {
+func (chain *Generative) Adding(n int, input string) {
 	order := rand.Intn(n)
+
 	s_tokens := chain.ChainArray(input, order)
 	e_tokens := chain.ChainArray(input, order)
 
+	combined := chain.Concatinate(s_tokens, e_tokens)
+	sequence := make([]string, len(combined))
+	for i := range sequence {
+		if sequence != nil {
+			sequence = append(sequence, combined...)
+		}
+
+		if sequence == nil {
+			sequence[i] = sequence[0]
+		}
+	}
 }
 
 func (g *Generative) MarkovChains(input string) []string {
+	g.Adding(10, input)
 
 	return nil
 }
