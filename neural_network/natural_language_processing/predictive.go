@@ -13,10 +13,6 @@ You should have received a copy of the GNU General Public License along with Pix
 // predictive.go
 package naturallanguageprocessing
 
-import (
-	"fmt"
-)
-
 /* Simplicity should be an absolute priority when making anything.
 
 I find myself reading and reading, and the more I do; the more frustrated
@@ -48,11 +44,6 @@ func (p *Predictive) GPE_predictive(input string) ([][]string, []string, []strin
 	open := "../PixAI/words_en/GPE.csv" // file location
 	word := c.ConvertToString(open)     // converting to string
 
-	fmt.Println("-----[FOR DEBUGGING]-----")
-	fmt.Println("Total Predictive Outputs:")
-	fmt.Println("-------------------------")
-	fmt.Println("[GEO POLITICAL ENTITIES:]")
-
 	if doc != nil || words != nil || len(word) != 0 {
 		return word, words, doc
 	}
@@ -64,8 +55,8 @@ func (p *Predictive) GPE_predictive(input string) ([][]string, []string, []strin
 func (p *Predictive) PredictGPE(input string, val chan float64) {
 	c := Conversion{}
 
-	word, words, doc := p.GPE_predictive(input)
-	fmt.Println("known_matches:", len(word), "number_known:", len(words), "input_len:", len(doc))
+	_, words, doc := p.GPE_predictive(input)
+	//fmt.Println("known_matches:", len(word), "number_known:", len(words), "input_len:", len(doc))
 
 	// comparing the lengths and values with the other arrays
 	v := 0
@@ -84,9 +75,6 @@ func (p *Predictive) PredictGPE(input string, val chan float64) {
 
 		//fmt.Println("GPE:", found)
 	}
-
-	fmt.Println("Total: GPE:", v)
-	fmt.Println("-------------------------")
 
 	// appending the document fielding
 	doc = append(doc, words...)
@@ -138,8 +126,6 @@ func (p *Predictive) STOPWORDS_predictive(input string) ([][]string, []string, [
 	open := "../PixAI/words_en/stopwords.csv"
 	word := c.ConvertToString(open) // converting to string
 
-	fmt.Println("-------[Stopwords:]------")
-
 	if doc != nil || words != nil || len(word) != 0 {
 		return word, words, doc
 	}
@@ -151,8 +137,8 @@ func (p *Predictive) STOPWORDS_predictive(input string) ([][]string, []string, [
 func (p *Predictive) PredictStopwords(input string, val chan float64) {
 	c := Conversion{}
 
-	word, words, doc := p.STOPWORDS_predictive(input)
-	fmt.Println("known_matches:", len(word), "number_known:", len(words), "input_len:", len(doc))
+	_, words, doc := p.STOPWORDS_predictive(input)
+	//fmt.Println("known_matches:", len(word), "number_known:", len(words), "input_len:", len(doc))
 
 	v := 0
 	x := len(doc)
@@ -170,9 +156,6 @@ func (p *Predictive) PredictStopwords(input string, val chan float64) {
 
 		//fmt.Println("StopWords:", found)
 	}
-
-	fmt.Println("Total: Stopwords:", v)
-	fmt.Println("-------------------------")
 
 	doc = append(doc, words...)
 
@@ -219,8 +202,6 @@ func (p *Predictive) NOUNS_predictive(input string) ([][]string, []string, []str
 	open := "../PixAI/words_en/nouns.csv"
 	word := c.ConvertToString(open) // converting to string
 
-	fmt.Println("---------[Nouns:]--------")
-
 	if doc != nil || words != nil || len(word) != 0 {
 		return word, words, doc
 	}
@@ -232,8 +213,8 @@ func (p *Predictive) NOUNS_predictive(input string) ([][]string, []string, []str
 func (p *Predictive) PredictNouns(input string, val chan float64) {
 	c := Conversion{}
 
-	word, words, doc := p.NOUNS_predictive(input)
-	fmt.Println("known_matches:", len(word), "number_known:", len(words), "input_len:", len(doc))
+	_, words, doc := p.NOUNS_predictive(input)
+	//fmt.Println("known_matches:", len(word), "number_known:", len(words), "input_len:", len(doc))
 
 	v := 0
 	x := len(doc)
@@ -251,9 +232,6 @@ func (p *Predictive) PredictNouns(input string, val chan float64) {
 
 		//fmt.Println("Nouns:", found)
 	}
-
-	fmt.Println("Total: Nouns:", v)
-	fmt.Println("-------------------------")
 
 	doc = append(doc, words...)
 
@@ -299,8 +277,6 @@ func (p *Predictive) VERBS_predictive(input string) ([][]string, []string, []str
 	open := "../PixAI/words_en/verbs.csv"
 	word := c.ConvertToString(open) // converting to string
 
-	fmt.Println("---------[Verbs:]--------")
-
 	if doc != nil || words != nil || len(word) != 0 {
 		return word, words, doc
 	}
@@ -312,8 +288,8 @@ func (p *Predictive) VERBS_predictive(input string) ([][]string, []string, []str
 func (p *Predictive) PredictVerbs(input string, val chan float64) {
 	c := Conversion{}
 
-	word, words, doc := p.VERBS_predictive(input)
-	fmt.Println("known_matches:", len(word), "number_known:", len(words), "input_len:", len(doc))
+	_, words, doc := p.VERBS_predictive(input)
+	//fmt.Println("known_matches:", len(word), "number_known:", len(words), "input_len:", len(doc))
 
 	v := 0
 	x := len(doc)
@@ -331,9 +307,6 @@ func (p *Predictive) PredictVerbs(input string, val chan float64) {
 
 		//fmt.Println("Verbs:", found)
 	}
-
-	fmt.Println("Total: VERBS: ", v)
-	fmt.Println("-------------------------")
 
 	doc = append(doc, words...)
 

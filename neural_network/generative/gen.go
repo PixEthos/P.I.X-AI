@@ -15,36 +15,95 @@ package generative
 
 // calling variables
 import (
+
+	// std
 	"fmt"
 	"math/rand"
+	"strings"
+
+	// local
 	information "pixai/neural_network"
 	natural "pixai/neural_network/natural_language_processing"
+	matrix "pixai/data/matrix"
 )
+
+// It's time. We'll start over from zero with this V2, and entrust the future to the next generation.
 
 // naming vars
 var (
+	// natural language processing
 	tokens    = natural.NLP{}           // tokens
 	enum      = natural.Enumerate{}     // enumeration
 	conv      = natural.Conversion{}    // Conversion variables
+
+	// data processing
 	variables = information.Variables{} // Variables for the neural_network
 	weights   = information.Weights{}   // Randomness and weights
 	neurons   = information.Layers{}    // Input
-)
 
-// array
-type StringArray map[string]int
+	// matrix handling
+	mat32     = matrix.Matrix32{}       // Matrix
+)
 
 // struct for organization and global control
 type Generative struct {
 
 	// Markov
-	frequency map[string]StringArray
+	frequency map[string][]string
 	order     int
 }
 
-func (Generative) NewChain(order int) *Generative {
-	chain := Generative{order: order, frequency: make(map[string]StringArray)}
+// prefix
+type Prefix []string
+
+// prefix joining
+func (p Prefix) Join(input string) string {
+	return strings.Join(p, input)
+}
+
+// prefix merging
+func (p Prefix) Merge(input string) {
+
+	// for loop
+	for i := range p {
+		if p != nil {
+
+			// appending for a change
+			p = make([]string, len(p[i:]))
+
+			// merging inputs
+			p[len(p)-1] = input
+		}
+
+		// nil check
+		if i == 0 {
+			p[i] = p[0]
+		}
+	}
+}
+
+// chain
+func (Generative) Chain(order int) *Generative {
+	chain := Generative{order: order, frequency: make(map[string][]string)}
 	return &chain
+}
+
+// building
+func (chain *Generative) Build(input string) {
+	p := make(Prefix, chain.order)
+
+	for l := range input {
+		if l != 0 {
+			key := p.Join(input)
+			chain.frequency[key] = append(chain.frequency[key], input)
+			p.Merge(input)
+		}
+
+		if l == 0 {
+			chain := chain.frequency[""]
+			chain[l] = chain[0]
+		}
+	}
 }
 
 // chain array
@@ -54,7 +113,7 @@ func (g *Generative) ChainArray(val string, num int) []string {
 		value[x] = val
 	}
 
-	if value != nil {
+	if len(value) != 0 {
 		return value
 	}
 
@@ -120,7 +179,7 @@ func (g *Generative) Enum(input string) string {
 // adding the markov chains
 //                       int, string, []string
 /* Example: chain.Adding(2, input, extracted_input) */
-func (chain *Generative) Adding(n int, input string) {
+func (chain *Generative) Adding(n int, input string) []string {
 	order := rand.Intn(n)
 
 	// arrays
@@ -129,26 +188,51 @@ func (chain *Generative) Adding(n int, input string) {
 
 	// combination
 	combined := chain.Concatinate(s_tokens, e_tokens)
-	sequence := make([]string, len(combined))
-	for i := range sequence {
-		if sequence != nil {
-			sequence = append(sequence, combined...)
-		}
-
-		if sequence == nil {
-			sequence[i] = sequence[0]
-		}
+	if combined != nil {
+		return combined
 	}
-}
-
-func (g *Generative) MarkovChains(input string) []string {
-	g.Adding(10, input)
 
 	return nil
 }
 
+func (chain *Generative) MarkovChains(input string) []string {
+	split := chain.Splitting(input)
+	enum := chain.Enum(split)
+	add := chain.Adding(10, enum)
+
+	for i := range add {
+		if add != nil {
+			add = append(add, enum)
+		}
+
+		if i == 0 {
+			add[i] = add[0]
+		}
+	}
+
+	if add != nil {
+		return add
+	}
+
+	return nil
+}
+
+func (g *Generative) Convert(input string) string {
+	val := g.MarkovChains(input)
+	conv := conv.ArraytoString(val)
+
+	if len(conv) != 0 {
+		fmt.Println(conv)
+		return conv
+	}
+
+	return ""
+}
+
 // initializing
-func (g *Generative) GenerativeInit() error {
+func (g *Generative) GenerativeInit(val string) error {
+	g.Convert(val)
+
 	return nil
 }
 

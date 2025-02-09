@@ -14,7 +14,6 @@ You should have received a copy of the GNU General Public License along with Pix
 package neuralnet
 
 import (
-	"fmt"
 	"math/rand"
 
 	"pixai/data/matrix"
@@ -116,8 +115,6 @@ func (n *Neurons) processed_trinary(input matrix.Matrix32, count uint32, val flo
 // context holder
 func (n *Neurons) gru_processed_trinary(input matrix.Matrix32, con string) matrix.Matrix32 {
 	output := n.GRU_trinary(input)
-
-	fmt.Println("\nTrinary GRU layering:")
 
 	// nouns
 	nouns := predict.NOUNActivator(con)

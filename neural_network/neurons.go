@@ -14,7 +14,6 @@ You should have received a copy of the GNU General Public License along with Pix
 package neuralnet
 
 import (
-	"fmt"
 	"math/rand"
 
 	"pixai/data/matrix"
@@ -255,8 +254,6 @@ func (n *Neurons) Input(input matrix.Matrix32, count uint32, val float32) ([][]f
 // context holder
 func (n *Neurons) gru_processed(input matrix.Matrix32, con string) matrix.Matrix32 {
 	output := n.GRU_primary(input)
-
-	fmt.Println("Primary GRU layering:")
 
 	GPE := predict.GPEActivator(con)
 	var gpe_32 float32

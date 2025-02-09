@@ -89,24 +89,57 @@ func (nr *NotRecognized) Values() error {
 	return err
 }
 
+func (n *Neurons) GRUActivation(input matrix.Matrix32, in string) {
+	l := Layers{}
+
+	gru_pri := n.gru_processed(input, in)
+	primary := l.GRU_sigmoid(gru_pri, "float")
+	fmt.Println("GRU_primary_set: ", primary)
+
+	gru_sec := n.gru_processed_secondary(input, in)
+	secondary := l.GRU_sigmoid(gru_sec, "float")
+	fmt.Println("GRU_secondary_set: ", secondary)
+
+	gru_tri := n.gru_processed_trinary(input, in)
+	trinary := l.GRU_sigmoid(gru_tri, "float")
+	fmt.Println("GRU_trinary_set: ", trinary)
+}
+
+func (n *Neurons) NeuronActivation(input matrix.Matrix32, total float32) {
+	v := Variables{}
+
+	n.encapsulated(n.Neuron_Count)
+	n.encapsulated_secondary(400)
+	n.encapsulated_trinary(400)
+	output_1, output_2, output_3 := n.output(input, n.Neuron_Count, total)
+	n.combined_outputs(input, n.Neuron_Count, total)
+	accuracy, sec, tri := n.neuron_sigmoid(input, n.Neuron_Count, total)
+
+	primary := v.SigmoidDerivative(accuracy) // derivative of the curve
+	secondary := v.SigmoidDerivative(sec)
+	trinary := v.SigmoidDerivative(tri)
+
+	fmt.Println("Accuracy outputs:")
+	fmt.Println("Primary accuracy: ", primary,
+		"\nSecondary accuracy: ", secondary,
+		"\nTrinary accuracy: ", trinary)
+
+	fmt.Println("Output_1: ", output_1,
+		"\nOutput_2: ", output_2,
+		"\nOutput_3: ", output_3)
+}
+
 // learning
-func (n *Neurons) NetworkLearning() (float64, error) {
+func (n *Neurons) NetworkLearning(in string) (float64, error) {
 	// structs
 	w := Weights{}
 	v := Variables{}
 	c := Confidence{}
 	nr := NotRecognized{}
-	l := Layers{}
 
 	// cache types
 	f64cache := cache.Newf64[string, float64]()
 	matrixCache := cache.RegCache[string, matrix.Matrix32]()
-
-	defer nat.Close()
-	in, err := nat.NLPinit()
-	if err != nil {
-		fmt.Println("NLP returned an error")
-	}
 
 	// rand
 	i := rand.Int31n(10000) + 190/5
@@ -163,32 +196,15 @@ func (n *Neurons) NetworkLearning() (float64, error) {
 
 	mat32 := matrix.Matrix{}
 	input_array := matrix.Matrix32{{total + float32(correct) + float32(w.output) + output}}
+	inputs := mat32.Matrix32bit(input_array)
 
 	// neuron calcs
-	inputs := mat32.Matrix32bit(input_array)
-	neurons := n.encapsulated(n.Neuron_Count)
-	secondary_neurons := n.encapsulated_secondary(400)
-	trinary_neurons := n.encapsulated_trinary(400)
-	primary, secondary, trinary := n.output(inputs, n.Neuron_Count, total)
-	neuron_output := n.combined_outputs(inputs, n.Neuron_Count, total)
-	neuron_accuracy, sec, tri := n.neuron_sigmoid(input_array, n.Neuron_Count, total)
+	n.NeuronActivation(inputs, total)
 
 	// GRU
-	fmt.Println("\n---[DEBUGGING OUTPUTS:]--")
-
-	gru_pri := n.gru_processed(inputs, in)
-	pri_der := l.GRU_sigmoid(gru_pri, "float")
-
-	gru_sec := n.gru_processed_secondary(inputs, in)
-	sec_der := l.GRU_sigmoid(gru_sec, "float")
-
-	gru_tri := n.gru_processed_trinary(inputs, in)
-	tri_der := l.GRU_sigmoid(gru_tri, "float")
+	n.GRUActivation(inputs, in)
 
 	// calculations
-	w.derivative = v.SigmoidDerivative(neuron_accuracy) // derivative of the curve
-	sec_derivative := v.SigmoidDerivative(sec)
-	tri_derivative := v.SigmoidDerivative(tri)
 	w.prediction = correct / float64(total)          // predictive
 	accuracy = v.Sigmoid(w.Accuracy(total, correct)) // weighted prediction
 	w.output = float64(total) + correct              // neuron output
@@ -197,7 +213,6 @@ func (n *Neurons) NetworkLearning() (float64, error) {
 	c.output_accuracy = w.output
 	c.derivative_accuracy = w.derivative
 	c.prediction_accuracy = w.prediction
-	c.neuron_output = neuron_output
 
 	// confidence caching
 	f64cache.Setf64bit("confidence accuracy", accuracy)
@@ -206,43 +221,21 @@ func (n *Neurons) NetworkLearning() (float64, error) {
 	matrixCache.SetReg("neuron output", c.neuron_output)
 	f64cache.Setf64bit("output total", c.output_accuracy)
 
-	// output
-	fmt.Println("\n------[NEURONS:]------")
-	fmt.Println("combined number of neurons: ", len(neurons)+len(secondary_neurons)+len(trinary_neurons))
-	fmt.Println("primary set: ", len(neurons))
-	fmt.Println("secondary set: ", len(secondary_neurons))
-	fmt.Println("trinary set: ", len(trinary_neurons))
-
-	fmt.Println("\n------[ACCURACY:]-----")
-	fmt.Println("primary_accuracy: ", c.derivative_accuracy, pri_der)
-	fmt.Println("secondary_accuracy: ", sec_derivative, sec_der)
-	fmt.Println("trinary_accuracy: ", tri_derivative, tri_der)
-	fmt.Println("prediction: ", c.prediction_accuracy)
-	fmt.Println("accuracy: ", accuracy)
-
-	fmt.Println("\n------[OUTPUTS:]------")
-	fmt.Println("output total: ", c.output_accuracy)
-	fmt.Println("linear: ", c.linear_accuracy)
-	fmt.Println("primary set: ", primary)
-	fmt.Println("secondary set: ", secondary)
-	fmt.Println("trinary set: ", trinary)
-	fmt.Println("combined: ", c.neuron_output)
-
 	// NaN checking
 	if math.IsNaN(w.derivative) || math.IsNaN(w.prediction) || math.IsNaN(w.output) || math.IsNaN(w.Accuracy(total, correct)) {
 		return 0, nr.Values()
 	}
 
 	// output
-	out = w.output + float64(output) + correct + float64(total) // total outputs
+	out = float64(total)
 
 	return out, nil
 }
 
 // network
-func (n *Neurons) NeuralNetwork() error {
+func (n *Neurons) NeuralNetwork(input string) error {
 
-	output, err := n.NetworkLearning()
+	output, err := n.NetworkLearning(input)
 	if err != nil {
 		return err
 	}
@@ -253,10 +246,10 @@ func (n *Neurons) NeuralNetwork() error {
 }
 
 // init
-func (n *Neurons) NeuralNetworkInit() error {
+func (n *Neurons) NeuralNetworkInit(input string) error {
 	var err error
 
-	if err := n.NeuralNetwork(); err != nil {
+	if err := n.NeuralNetwork(input); err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		return err
 	}

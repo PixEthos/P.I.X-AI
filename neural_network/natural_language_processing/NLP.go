@@ -16,6 +16,7 @@ package naturallanguageprocessing
 import (
 	// standard
 	"bufio"
+	"encoding/hex"
 	"fmt"
 	"os"
 	"strconv"
@@ -58,33 +59,66 @@ func (nlp *NLP) NLPErrors(input, output string, length int32) error {
 	return err
 }
 
-// init
-func (nlp *NLP) NLPinit() (string, error) {
-	var err error
-	c := Conversion{}
+func (nlp *NLP) Scanner(bit []byte) string {
 	m := Match{}
+	c := Conversion{}
 
-	cachestring := cache.RegCache[string, string]()
+	// buffer io
+	reader := bufio.NewReader(os.Stdin)
+	val := bufio.NewScanner(reader)
 
-	sentence := bufio.NewScanner(os.Stdin)
-	if sentence.Scan() {
-		split := nlp.SplitTokens(sentence.Text())
+	// scanning inside the loop
+	if val.Scan() {
+
+		// tokens splitting
+		split := nlp.SplitTokens(val.Text())
 		in := c.ArraytoString(split)
 
+		// len values
 		sp := nlp.Tokens(len(split))
+
+		// input matching
 		m.Matching(in)
 		match := m.MatchingLength(in)
 
-
-		sentence2 := "PLACEHOLDER: I do not know, please understand"
-		cachestring.SetReg("s2", sentence2)
-
+		// output
 		fmt.Printf("input tokens: %d\n", len(sp))
 		fmt.Println("matched: ", match)
 
-		if len(in) != 0 {
-			return in, nil
+		if len(in) > 256 {
+			return ""
 		}
+
+		if len(in) < 256 {
+		// byte encoding
+		source := make([]byte, len(in))
+		for {
+			reader.Read(bit)
+			hex.Encode(bit, source)
+			hex.Dump(bit)
+
+			break
+		}
+		}
+
+		if len(in) != 0 {
+			return in
+		}
+	}
+
+	return ""
+}
+
+// init
+func (nlp *NLP) NLPinit() (string, error) {
+	var err error
+	cachestring := cache.RegCache[string, string]()
+	bit := make([]byte, 256)
+	output := nlp.Scanner(bit)
+
+	cachestring.SetReg(output, "output")
+	if len(output) != 0 {
+		return output, nil
 	}
 
 	return "", err

@@ -14,7 +14,6 @@ You should have received a copy of the GNU General Public License along with Pix
 package neuralnet
 
 import (
-	"fmt"
 	"math/rand"
 
 	"pixai/data/matrix"
@@ -124,8 +123,6 @@ See? That simple
 */
 func (n *Neurons) gru_processed_secondary(input matrix.Matrix32, con string) matrix.Matrix32 {
 	output := n.GRU_secondary(input)
-
-	fmt.Println("\nSecondary GRU layering:")
 
 	// GPE
 	// calling predictive pieces

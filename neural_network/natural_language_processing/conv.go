@@ -16,7 +16,6 @@ package naturallanguageprocessing
 import (
 	"bufio"
 	"encoding/csv"
-	"fmt"
 	"os"
 	"strings"
 )
@@ -187,8 +186,6 @@ func (c *Conversion) Filtration(filter int, element []string) float64 {
 			}
 		}
 	}
-
-	fmt.Println("Filtration:", result)
 
 	if len(output) != 0 {
 		return result
