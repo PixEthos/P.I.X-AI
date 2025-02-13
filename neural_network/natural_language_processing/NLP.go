@@ -16,13 +16,13 @@ package naturallanguageprocessing
 import (
 	// standard
 	"bufio"
-	"encoding/hex"
 	"fmt"
 	"os"
 	"strconv"
 
 	// AI
 	"pixai/data/cache"
+	encode "pixai/data/encoding"
 )
 
 // Why add natural_language_processing to a games AI?
@@ -59,13 +59,12 @@ func (nlp *NLP) NLPErrors(input, output string, length int32) error {
 	return err
 }
 
-func (nlp *NLP) Scanner(bit []byte) string {
+func (nlp *NLP) Scanner() string {
 	m := Match{}
 	c := Conversion{}
+	encode := encode.Encoded{}
 
-	// buffer io
-	reader := bufio.NewReader(os.Stdin)
-	val := bufio.NewScanner(reader)
+	val := bufio.NewScanner(os.Stdin)
 
 	// scanning inside the loop
 	if val.Scan() {
@@ -85,20 +84,10 @@ func (nlp *NLP) Scanner(bit []byte) string {
 		fmt.Printf("input tokens: %d\n", len(sp))
 		fmt.Println("matched: ", match)
 
-		if len(in) > 256 {
-			return ""
-		}
-
 		if len(in) < 256 {
-		// byte encoding
-		source := make([]byte, len(in))
-		for {
-			reader.Read(bit)
-			hex.Encode(bit, source)
-			hex.Dump(bit)
-
-			break
-		}
+			// byte encoding
+			bit := make([]byte, 256)
+			encode.Encode(in, bit)
 		}
 
 		if len(in) != 0 {
@@ -113,8 +102,7 @@ func (nlp *NLP) Scanner(bit []byte) string {
 func (nlp *NLP) NLPinit() (string, error) {
 	var err error
 	cachestring := cache.RegCache[string, string]()
-	bit := make([]byte, 256)
-	output := nlp.Scanner(bit)
+	output := nlp.Scanner()
 
 	cachestring.SetReg(output, "output")
 	if len(output) != 0 {

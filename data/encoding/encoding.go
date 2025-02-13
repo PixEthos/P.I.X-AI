@@ -11,45 +11,62 @@ PixAI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANT
 You should have received a copy of the GNU General Public License along with PixAI. If not, see <https://www.gnu.org/licenses/>. */
 
 // encoding.go
-package generative
+package encode
+
+import (
+	"bufio"
+	"encoding/hex"
+	"log"
+	"os"
+)
 
 type Encoded struct {
 	enStd []byte // uint8
+	input string
 }
 
 var (
 	e   = Encoded{}
 	std = e.enStd
+	key = e.input
 )
 
-// Byte encoding, basically it's using the hex encoding from the NLP pieces of the algorithm.
-func (e *Encoded) Encode(val uint8, input string) []byte {
-	std = make([]byte, val)
+// key for encoding
+func (e *Encoded) Key() string {
 
-	// just a for loop to give the inside value length
-	for i := range std {
-		if i != 0 {
-			std = make([]byte, len(input))
-		}
+	// scanner
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
 
-		if i == 0 {
-			return nil
-		}
+		// key
+		key = scanner.Text()
 	}
 
-	if std != nil {
-		return std
+	// 0 check
+	if len(key) != 0 {
+		return key
 	}
 
-	return nil
+	return ""
 }
 
-func (e *Encoded) Decode(val uint8) []byte {
-
-
-	return nil
+// encoding
+func (e *Encoded) Encode(input string, bit []byte) {
+	std = make([]byte, len(input))
+	hex.Encode(bit, std)
 }
 
-func (e *Encoded) Binary(input string) {
+// decoding
+func (e *Encoded) Decode(bit []byte) int {
+	std = make([]byte, len(bit))         // source
+	decoded, err := hex.Decode(bit, std) // decoding
+	if err != nil {
+		log.Fatal("Error decoding: ", err)
+	}
 
+	if decoded != 0 {
+		return decoded
+	}
+
+	return 0
 }

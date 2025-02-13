@@ -22,9 +22,9 @@ import (
 	"strings"
 
 	// local
+	matrix "pixai/data/matrix"
 	information "pixai/neural_network"
 	natural "pixai/neural_network/natural_language_processing"
-	matrix "pixai/data/matrix"
 )
 
 // It's time. We'll start over from zero with this V2, and entrust the future to the next generation.
@@ -32,9 +32,9 @@ import (
 // naming vars
 var (
 	// natural language processing
-	tokens    = natural.NLP{}           // tokens
-	enum      = natural.Enumerate{}     // enumeration
-	conv      = natural.Conversion{}    // Conversion variables
+	tokens = natural.NLP{}        // tokens
+	enum   = natural.Enumerate{}  // enumeration
+	conv   = natural.Conversion{} // Conversion variables
 
 	// data processing
 	variables = information.Variables{} // Variables for the neural_network
@@ -42,7 +42,7 @@ var (
 	neurons   = information.Layers{}    // Input
 
 	// matrix handling
-	mat32     = matrix.Matrix32{}       // Matrix
+	mat32 = matrix.Matrix32{} // Matrix
 )
 
 // struct for organization and global control
@@ -231,7 +231,8 @@ func (g *Generative) Convert(input string) string {
 
 // initializing
 func (g *Generative) GenerativeInit(val string) error {
-	g.Convert(val)
+	value := g.Convert(val)
+	fmt.Println(value)
 
 	return nil
 }

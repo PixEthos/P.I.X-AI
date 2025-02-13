@@ -44,8 +44,8 @@ import (
 	"os"
 
 	neuralnet "pixai/neural_network"
-	natural "pixai/neural_network/natural_language_processing"
 	gen "pixai/neural_network/generative"
+	natural "pixai/neural_network/natural_language_processing"
 )
 
 func main() {
@@ -60,7 +60,7 @@ func main() {
 	}
 
 	defer g.Close()
-	if err := g.GenerativeInit(in) ; err != nil {
+	if err := g.GenerativeInit(in); err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		return
 	}
