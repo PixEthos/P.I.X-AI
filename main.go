@@ -43,6 +43,7 @@ import (
 	"fmt"
 	"os"
 
+	"pixai/ui"
 	neuralnet "pixai/neural_network"
 	gen "pixai/neural_network/generative"
 	natural "pixai/neural_network/natural_language_processing"
@@ -52,6 +53,10 @@ func main() {
 	n := neuralnet.Neurons{}
 	g := gen.Generative{}
 	nat := natural.NLP{}
+	user := ui.UserInterface{}
+
+	defer user.Close()
+	user.ApplicationUI()
 
 	defer nat.Close()
 	in, err := nat.NLPinit()

@@ -50,23 +50,29 @@ func (e *Encoded) Key() string {
 	return ""
 }
 
+// string encoding
+func (e *Encoded) StringEncode(bit []byte) string {
+	return hex.EncodeToString(bit)
+}
+
 // encoding
 func (e *Encoded) Encode(input string, bit []byte) {
 	std = make([]byte, len(input))
 	hex.Encode(bit, std)
+	e.Decode(input, bit)
 }
 
 // decoding
-func (e *Encoded) Decode(bit []byte) int {
-	std = make([]byte, len(bit))         // source
-	decoded, err := hex.Decode(bit, std) // decoding
+func (e *Encoded) Decode(input string, bit []byte) []byte {
+	encoded := e.StringEncode(bit)
+	decoded, err := hex.DecodeString(encoded) // decoding
 	if err != nil {
 		log.Fatal("Error decoding: ", err)
 	}
 
-	if decoded != 0 {
+	if decoded != nil {
 		return decoded
 	}
 
-	return 0
+	return nil
 }

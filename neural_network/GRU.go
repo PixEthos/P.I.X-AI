@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License along with Pix
 package neuralnet
 
 import (
-	"fmt"
+	"log"
 	"math/rand/v2"
 	mat "pixai/data/matrix"
 )
@@ -337,7 +337,7 @@ func (l *Layers) GRU_activation(neurons, layers uint32, input mat.Matrix32, valu
 
 func (l *Layers) close() {
 	if l != nil {
-		fmt.Println("GRU layer cleared from memory")
+		log.Println("GRU layer cleared from memory")
 		return
 	}
 }

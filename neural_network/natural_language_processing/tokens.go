@@ -14,6 +14,7 @@ You should have received a copy of the GNU General Public License along with Pix
 package naturallanguageprocessing
 
 import (
+	"fmt"
 	"math"
 	"regexp"
 	"strconv"
@@ -43,6 +44,15 @@ func (pre *Predictive) Entropy(x, total float64) float64 {
 func (pre *Predictive) Information(x, total float64) float64 {
 	information := 1 / pre.Entropy(x, total)
 	return math.Log1p(information)
+}
+
+func (e *Enumerate) Enumerate(input []string, val int) *Enumerate {
+	enum := Enumerate{
+		num: val,
+		val: input,
+	}
+
+	return &enum
 }
 
 /* This is the tokenizing file, handling sentences, fielding, and conversions */
@@ -146,75 +156,50 @@ func (nlp *NLP) Tokens(input int) []int {
 }
 
 // enumerate doument
-func (e *Enumerate) EnumerationDocument(input string) *Enumerate {
+func (e *Enumerate) EnumerationDocument(input string) []Enumerate {
 	var count int
-	val := []string{}
 	nlp := NLP{}
-	doc := nlp.Document(input)
+	split := nlp.Document(input)
+	enum := make([]Enumerate, len(split))
 
-	for i, x := range doc {
-		val = append(val, x)
-		for count = range i {
-			count++
+	for count = 0; count < len(split); count++ {
+		caller := e.Enumerate(split, count)
+		enum[count] = Enumerate{
+			num: caller.num,
+			val: caller.val,
 		}
 	}
 
-	enumerate := Enumerate{
-		num: count,
-		val: val,
-	}
-
-	return &enumerate
+	return enum
 }
 
 // enumerate split tokens
-func (e *Enumerate) EnumerationSplit(input string) *Enumerate {
+func (e *Enumerate) EnumerationSplit(input string) []Enumerate {
 	var count int
-	val := []string{}
 	nlp := NLP{}
 	split := nlp.SplitTokens(input)
+	enum := make([]Enumerate, len(split))
 
-	for i, x := range split {
-		val = append(val, x)
-		for count = range i {
-			count++
+	for count = 0; count < len(split); count++ {
+		caller := e.Enumerate(split, count)
+		enum[count] = Enumerate{
+			num: caller.num,
+			val: caller.val,
 		}
 	}
-
-	enumerate := Enumerate{
-		num: count,
-		val: val,
-	}
-
-	return &enumerate
-}
-
-// converting to int
-func (e *Enumerate) EnumerationAtoi(input string) int {
-	value := e.num
-	word := e.val
-
-	for i := 0; i < value; i++ {
-		word = append(word, input)
-		for _, x := range word {
-			num, _ := strconv.Atoi(x)
-			value = num
-		}
-	}
-
-	if value != 0 {
-		return value
-	}
-
-	return 0
+	
+	return enum
 }
 
 // converting to string
 func (e *Enumerate) EnumerationItoa(input string) string {
-	value := e.num
-	word := e.val
+	nlp := NLP{}
+	split := nlp.SplitTokens(input)
+	caller := e.Enumerate(split, len(split))
+	value := caller.num
+	word := caller.val
 
-	var val string 
+	var val string
 	for i := range word {
 		word = append(word, input)
 
@@ -235,29 +220,24 @@ func (e *Enumerate) EnumerationItoa(input string) string {
 
 // enumeration
 func (e *Enumerate) Enumeration(input string) []string {
-	num := e.EnumerationAtoi(input)
+	nlp := NLP{}
+	split := nlp.SplitTokens(input)
 	word := e.EnumerationItoa(input)
+	caller := e.Enumerate(split, len(input))
 
-	enumerate := make(map[string]int)
-	information := make([]string, len(input))
-	for _, i := range enumerate {
-		_, value := enumerate[word]
-		for value {
-			if i != 0 {
-				information = append(information, strconv.Itoa(num), word)
-				break
-			}
+	enum := make([]string, len(caller.val))
+	if len(word) > 0 {
+		value := caller.num
+		for value = 0; value < len(caller.val); value++ {
+			enum[value] = caller.val[value]
+		}
 
-			if i == 0 {
-				break
-			}
+		if enum != nil {
+			return enum
 		}
 	}
 
-
-	if num > 0 {
-		return information
-	}
+	fmt.Println(enum)
 
 	return nil
 }

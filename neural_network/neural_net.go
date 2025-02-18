@@ -15,6 +15,7 @@ package neuralnet
 
 import (
 	"fmt"
+	"log"
 	"math"
 	"math/rand"
 	"os"
@@ -251,6 +252,7 @@ func (n *Neurons) NeuralNetworkInit(input string) error {
 
 	if err := n.NeuralNetwork(input); err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
+		log.Println(err)
 		return err
 	}
 
@@ -260,7 +262,7 @@ func (n *Neurons) NeuralNetworkInit(input string) error {
 // close
 func (n *Neurons) close() {
 	if n != nil {
-		fmt.Println("NeuralNetwork cleared from memory")
+		log.Println("NeuralNetwork cleared from memory")
 		return
 	}
 }

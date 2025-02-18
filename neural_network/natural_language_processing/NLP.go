@@ -15,14 +15,18 @@ package naturallanguageprocessing
 
 import (
 	// standard
-	"bufio"
+
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 
 	// AI
 	"pixai/data/cache"
 	encode "pixai/data/encoding"
+
+	// ui
+	"pixai/ui"
 )
 
 // Why add natural_language_processing to a games AI?
@@ -52,6 +56,7 @@ func (nlp *NLP) NLPErrors(input, output string, length int32) error {
 	Valstr, err := strconv.Atoi(nlp.valStr)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
+		log.Println(err)
 		fmt.Println(Valstr)
 		return err
 	}
@@ -59,40 +64,38 @@ func (nlp *NLP) NLPErrors(input, output string, length int32) error {
 	return err
 }
 
+// scanning input
 func (nlp *NLP) Scanner() string {
 	m := Match{}
 	c := Conversion{}
 	encode := encode.Encoded{}
+	user := ui.UserInterface{}
 
-	val := bufio.NewScanner(os.Stdin)
+	input := user.ApplicationInput()
 
-	// scanning inside the loop
-	if val.Scan() {
+	// tokens splitting
+	split := nlp.SplitTokens(input)
+	in := c.ArraytoString(split)
 
-		// tokens splitting
-		split := nlp.SplitTokens(val.Text())
-		in := c.ArraytoString(split)
+	// len values
+	sp := nlp.Tokens(len(split))
 
-		// len values
-		sp := nlp.Tokens(len(split))
+	// input matching
+	m.Matching(in)
+	match := m.MatchingLength(in)
 
-		// input matching
-		m.Matching(in)
-		match := m.MatchingLength(in)
+	// output
+	fmt.Printf("input tokens: %d\n", len(sp))
+	fmt.Println("matched: ", match)
 
-		// output
-		fmt.Printf("input tokens: %d\n", len(sp))
-		fmt.Println("matched: ", match)
+	if len(in) < 256 {
+		// byte encoding
+		bit := make([]byte, 256)
+		encode.Encode(in, bit)
+	}
 
-		if len(in) < 256 {
-			// byte encoding
-			bit := make([]byte, 256)
-			encode.Encode(in, bit)
-		}
-
-		if len(in) != 0 {
-			return in
-		}
+	if len(in) != 0 {
+		return in
 	}
 
 	return ""
@@ -101,12 +104,21 @@ func (nlp *NLP) Scanner() string {
 // init
 func (nlp *NLP) NLPinit() (string, error) {
 	var err error
+	user := ui.UserInterface{}
+
 	cachestring := cache.RegCache[string, string]()
 	output := nlp.Scanner()
+
+	user.OutputCaller(output)
 
 	cachestring.SetReg(output, "output")
 	if len(output) != 0 {
 		return output, nil
+	}
+
+	if len(output) == 0 {
+		log.Println(err)
+		return "", err
 	}
 
 	return "", err
@@ -114,7 +126,7 @@ func (nlp *NLP) NLPinit() (string, error) {
 
 func (nlp *NLP) close() {
 	if nlp != nil {
-		fmt.Println("NLP cleared from memory")
+		log.Println("NLP cleared from memory")
 		return
 	}
 }

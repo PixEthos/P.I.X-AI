@@ -18,6 +18,7 @@ import (
 
 	// std
 	"fmt"
+	"log"
 	"math/rand"
 	"strings"
 
@@ -144,36 +145,23 @@ func (g *Generative) Concatinate(input1, input2 []string) []string {
 // split
 func (g *Generative) Splitting(input string) string {
 	split := tokens.Document(input)
+	var_to_string := conv.ArraytoString(split)
 
-	words := make(map[string]int)
-	for _, x := range split {
-		_, word := words[x]
-		for word {
-			if len(x) == 0 {
-				break
-			}
-
-			if len(x) > 0 {
-				return x
-			}
-		}
+	if len(var_to_string) != 0 {
+		return var_to_string
 	}
 
 	return ""
 }
 
-func (g *Generative) Enum(input string) string {
+func (g *Generative) Enum(input string) []string {
 	enumerate := enum.Enumeration(input)
-	var x string
-	for _, i := range enumerate {
-		x = i
+	fmt.Println(enumerate)
+	if len(enumerate) != 0 {
+		return enumerate
 	}
 
-	if len(x) != 0 {
-		return x
-	}
-
-	return ""
+	return nil
 }
 
 // adding the markov chains
@@ -197,7 +185,8 @@ func (chain *Generative) Adding(n int, input string) []string {
 
 func (chain *Generative) MarkovChains(input string) []string {
 	split := chain.Splitting(input)
-	enum := chain.Enum(split)
+	enums := chain.Enum(split)
+	enum := conv.ArraytoString(enums)
 	add := chain.Adding(10, enum)
 
 	for i := range add {
@@ -211,6 +200,7 @@ func (chain *Generative) MarkovChains(input string) []string {
 	}
 
 	if add != nil {
+		fmt.Println("add: ", add)
 		return add
 	}
 
@@ -222,17 +212,20 @@ func (g *Generative) Convert(input string) string {
 	conv := conv.ArraytoString(val)
 
 	if len(conv) != 0 {
-		fmt.Println(conv)
 		return conv
 	}
+
+	fmt.Println("conv: ", conv)
 
 	return ""
 }
 
 // initializing
 func (g *Generative) GenerativeInit(val string) error {
+	p := Prefix{}
 	value := g.Convert(val)
-	fmt.Println(value)
+	join := p.Join(value)
+	fmt.Println("joining: ", join)
 
 	return nil
 }
@@ -240,7 +233,7 @@ func (g *Generative) GenerativeInit(val string) error {
 // closing
 func (g *Generative) close() {
 	if g != nil {
-		fmt.Println("Generation cleared from memory.")
+		log.Println("Generation cleared from memory.")
 	}
 }
 
