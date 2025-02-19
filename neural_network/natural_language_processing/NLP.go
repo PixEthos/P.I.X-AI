@@ -24,9 +24,7 @@ import (
 	// AI
 	"pixai/data/cache"
 	encode "pixai/data/encoding"
-
 	// ui
-	"pixai/ui"
 )
 
 // Why add natural_language_processing to a games AI?
@@ -34,12 +32,15 @@ import (
 
 type NLP struct {
 	valStr string
+	Input string
 }
 
 type Input struct{}
 
-func NaturalLanguagProcessing() *NLP {
-	nlp := &NLP{}
+func NaturalLanguagProcessing(input string) *NLP {
+	nlp := &NLP{
+		Input: input,
+	}
 	return nlp
 }
 
@@ -65,16 +66,15 @@ func (nlp *NLP) NLPErrors(input, output string, length int32) error {
 }
 
 // scanning input
-func (nlp *NLP) Scanner() string {
+func (nlp *NLP) Scanner(val string) string {
 	m := Match{}
 	c := Conversion{}
 	encode := encode.Encoded{}
-	user := ui.UserInterface{}
 
-	input := user.ApplicationInput()
+	value := NaturalLanguagProcessing(val)
 
 	// tokens splitting
-	split := nlp.SplitTokens(input)
+	split := nlp.SplitTokens(val)
 	in := c.ArraytoString(split)
 
 	// len values
@@ -89,6 +89,8 @@ func (nlp *NLP) Scanner() string {
 	fmt.Println("matched: ", match)
 
 	if len(in) < 256 {
+		value.Input = in
+
 		// byte encoding
 		bit := make([]byte, 256)
 		encode.Encode(in, bit)
@@ -102,14 +104,11 @@ func (nlp *NLP) Scanner() string {
 }
 
 // init
-func (nlp *NLP) NLPinit() (string, error) {
+func (nlp *NLP) NLPinit(val string) (string, error) {
 	var err error
-	user := ui.UserInterface{}
 
 	cachestring := cache.RegCache[string, string]()
-	output := nlp.Scanner()
-
-	user.OutputCaller(output)
+	output := nlp.Scanner(val)
 
 	cachestring.SetReg(output, "output")
 	if len(output) != 0 {

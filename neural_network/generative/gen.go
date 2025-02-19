@@ -200,7 +200,6 @@ func (chain *Generative) MarkovChains(input string) []string {
 	}
 
 	if add != nil {
-		fmt.Println("add: ", add)
 		return add
 	}
 
@@ -215,19 +214,17 @@ func (g *Generative) Convert(input string) string {
 		return conv
 	}
 
-	fmt.Println("conv: ", conv)
-
 	return ""
 }
 
 // initializing
-func (g *Generative) GenerativeInit(val string) error {
+func (g *Generative) GenerativeInit(val string) (string, error) {
 	p := Prefix{}
 	value := g.Convert(val)
 	join := p.Join(value)
 	fmt.Println("joining: ", join)
 
-	return nil
+	return value, nil
 }
 
 // closing

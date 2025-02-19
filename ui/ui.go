@@ -14,12 +14,18 @@ You should have received a copy of the GNU General Public License along with Pix
 package ui
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+
+	neural "pixai/neural_network"
+	gen "pixai/neural_network/generative"
+	nlp "pixai/neural_network/natural_language_processing"
 )
 
 // constants
@@ -34,22 +40,51 @@ var (
 )
 
 type UserInterface struct {
-	output string
+	Output string
 }
 
-// caller
 func (UserInterface) OutputCaller(input string) UserInterface {
 	user := UserInterface{
-		output: input,
+		Output: input,
 	}
 
 	return user
 }
 
-// input
-func (UserInterface) ApplicationInput() string {
-	input.SetPlaceHolder("Input the data/input here")
+func ApplicationInit(input string) string {
+	natural := nlp.NLP{}
+	n := neural.Neurons{}
+	output := gen.Generative{}
+	ui := UserInterface{}
 
+	defer natural.Close()
+	in, err := natural.NLPinit(input)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+	}
+
+	defer output.Close()
+	if information, err := output.GenerativeInit(in); err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+	} else {
+		ui.OutputCaller(information)
+
+		defer n.Close()
+		if err := n.NeuralNetworkInit(in); err != nil {
+			fmt.Fprintf(os.Stderr, "%v\n", err)
+		}
+
+		if len(information) > 0 {
+			return information
+		}
+	}
+
+	return ""
+}
+
+// input
+func (ui *UserInterface) ApplicationInput() string {
+	input.SetPlaceHolder("Input the data/input here")
 	if len(input.Text) != 0 {
 		return input.Text
 	}
@@ -59,6 +94,7 @@ func (UserInterface) ApplicationInput() string {
 
 // Window
 func (ui *UserInterface) ApplicationWindow() {
+	log.Println("Application started")
 
 	// Fyne callers
 	runner := app.New()
@@ -72,19 +108,22 @@ func (ui *UserInterface) ApplicationWindow() {
 
 	// labels
 	draw_input := widget.NewLabel("Input: ")
-	draw_output := widget.NewLabel(ui.output)
+	draw_output := widget.NewLabel(ui.Output)
 
 	// container
 	window.SetContent(container.NewVBox(
 		input,
 		draw_input,
+		draw_output,
 		widget.NewButton("send", func() {
 			draw_input.SetText(input.Text)
+			output := ApplicationInit(input.Text)
+			draw_output.SetText(output)
+
 		}),
-		draw_output,
 	))
 
-	log.Println(ui.output)
+	log.Println(ui.Output)
 
 	// runner
 	window.ShowAndRun()
@@ -98,7 +137,7 @@ func (ui *UserInterface) ApplicationUI() {
 // closer
 func (ui *UserInterface) close() {
 	if ui != nil {
-		log.Println("UI clear from memory")
+		log.Println("Closing application")
 	}
 }
 

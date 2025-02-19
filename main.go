@@ -40,39 +40,12 @@ for fun - look at things like Python. If you're me? Go. I love the language. it'
 package main
 
 import (
-	"fmt"
-	"os"
-
 	"pixai/ui"
-	neuralnet "pixai/neural_network"
-	gen "pixai/neural_network/generative"
-	natural "pixai/neural_network/natural_language_processing"
 )
 
 func main() {
-	n := neuralnet.Neurons{}
-	g := gen.Generative{}
-	nat := natural.NLP{}
 	user := ui.UserInterface{}
 
 	defer user.Close()
 	user.ApplicationUI()
-
-	defer nat.Close()
-	in, err := nat.NLPinit()
-	if err != nil {
-		fmt.Println("NLP returned an error")
-	}
-
-	defer g.Close()
-	if err := g.GenerativeInit(in); err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-		return
-	}
-
-	defer n.Close()
-	if err := n.NeuralNetworkInit(in); err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-		return
-	}
 }
