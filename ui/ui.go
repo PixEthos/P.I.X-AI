@@ -14,15 +14,21 @@ You should have received a copy of the GNU General Public License along with Pix
 package ui
 
 import (
+
+	// std
 	"fmt"
+	"image/color"
 	"log"
 	"os"
 
+	// fyne
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 
+	// internal
 	neural "pixai/neural_network"
 	gen "pixai/neural_network/generative"
 	nlp "pixai/neural_network/natural_language_processing"
@@ -43,6 +49,7 @@ type UserInterface struct {
 	Output string
 }
 
+// OutputCaller
 func (UserInterface) OutputCaller(input string) UserInterface {
 	user := UserInterface{
 		Output: input,
@@ -51,24 +58,30 @@ func (UserInterface) OutputCaller(input string) UserInterface {
 	return user
 }
 
+// Machine learning init
 func ApplicationInit(input string) string {
+
+	// structs
 	natural := nlp.NLP{}
 	n := neural.Neurons{}
 	output := gen.Generative{}
 	ui := UserInterface{}
 
+	// NLP
 	defer natural.Close()
 	in, err := natural.NLPinit(input)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 	}
 
+	// generative
 	defer output.Close()
 	if information, err := output.GenerativeInit(in); err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 	} else {
 		ui.OutputCaller(information)
 
+		// neural_network/GRU
 		defer n.Close()
 		if err := n.NeuralNetworkInit(in); err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
@@ -96,34 +109,60 @@ func (ui *UserInterface) ApplicationInput() string {
 func (ui *UserInterface) ApplicationWindow() {
 	log.Println("Application started")
 
+	os.Setenv("FYNE_SCALE", "1.5")
+
 	// Fyne callers
 	runner := app.New()
-	window := runner.NewWindow("data") // title
+	window := runner.NewWindow("PixAI") // title
 
 	// resize
 	window.Resize(fyne.NewSize(width, height))
+	settings := fyne.CurrentApp().Settings()
+	settings.Scale()
 
 	// functions
 	ui.ApplicationInput()
 
-	// labels
-	draw_input := widget.NewLabel("Input: ")
-	draw_output := widget.NewLabel(ui.Output)
+	// input labels
+	true_input := widget.NewLabel("Input: ")
+	draw_input := widget.NewLabel("")
+
+	// input style
+	draw_input.TextStyle.Bold = true
+	draw_input.TextStyle.Symbol = true
+
+	// input canvas
+	new_input := canvas.NewText(input.Text, color.White)
+	new_input.TextSize = 22
+
+	// output labels
+	true_output := widget.NewLabel("Output: ")
+	draw_output := widget.NewLabel("")
+
+	// output style
+	draw_output.TextStyle.Bold = true
+	draw_output.TextStyle.Symbol = true
+
+	// output canvas
+	new_output := canvas.NewText(ui.Output, color.White)
+	new_output.TextSize = 22
 
 	// container
-	window.SetContent(container.NewVBox(
+	content := container.NewVBox(
 		input,
-		draw_input,
-		draw_output,
+		true_input, draw_input, new_input,
+		true_output, draw_output, new_output,
 		widget.NewButton("send", func() {
 			draw_input.SetText(input.Text)
+
 			output := ApplicationInit(input.Text)
 			draw_output.SetText(output)
 
+			log.Println(output)
 		}),
-	))
+	)
 
-	log.Println(ui.Output)
+	window.SetContent(content)
 
 	// runner
 	window.ShowAndRun()

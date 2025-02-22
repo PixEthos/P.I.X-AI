@@ -40,10 +40,10 @@ var (
 	// data processing
 	variables = information.Variables{} // Variables for the neural_network
 	weights   = information.Weights{}   // Randomness and weights
-	neurons   = information.Layers{}    // Input
+	neurons   = information.Neurons{}   // Neuron groups
 
 	// matrix handling
-	mat32 = matrix.Matrix32{} // Matrix
+	mat32 = matrix.Matrix{} // Matrix
 )
 
 // struct for organization and global control
@@ -87,6 +87,17 @@ func (p Prefix) Merge(input string) {
 func (Generative) Chain(order int) *Generative {
 	chain := Generative{order: order, frequency: make(map[string][]string)}
 	return &chain
+}
+
+// GRU
+func (Generative) GRU_layers(length int, input string) {
+
+	// matrix
+	matrix := matrix.Matrix32{{float32(length)}}
+	variable := mat32.Matrix32bit(matrix)
+
+	// GRU activation layers
+	neurons.GRUActivation(variable, input)
 }
 
 // building

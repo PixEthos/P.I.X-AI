@@ -109,17 +109,28 @@ func (n *Neurons) GRUActivation(input matrix.Matrix32, in string) {
 func (n *Neurons) NeuronActivation(input matrix.Matrix32, total float32) {
 	v := Variables{}
 
+	// 2000 neurons
 	n.encapsulated(n.Neuron_Count)
+
+	// 400 neurons
 	n.encapsulated_secondary(400)
+
+	// 400 neurons
 	n.encapsulated_trinary(400)
+
+	// output combination
 	output_1, output_2, output_3 := n.output(input, n.Neuron_Count, total)
 	n.combined_outputs(input, n.Neuron_Count, total)
+
+	// accuracy
 	accuracy, sec, tri := n.neuron_sigmoid(input, n.Neuron_Count, total)
 
-	primary := v.SigmoidDerivative(accuracy) // derivative of the curve
+	// derivatives
+	primary := v.SigmoidDerivative(accuracy)
 	secondary := v.SigmoidDerivative(sec)
 	trinary := v.SigmoidDerivative(tri)
 
+	// debugging
 	fmt.Println("Accuracy outputs:")
 	fmt.Println("Primary accuracy: ", primary,
 		"\nSecondary accuracy: ", secondary,
