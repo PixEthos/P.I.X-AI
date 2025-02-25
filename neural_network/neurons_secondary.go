@@ -134,7 +134,7 @@ func (n *Neurons) gru_processed_secondary(input matrix.Matrix32, con string) mat
 		gpe_32 = float32(GPE + 1) // adding a variable
 
 		// checking the context
-		for i := 0; i > int(gpe_32); i++ {
+		for i := 0; i < int(gpe_32); i++ {
 
 			// making a map to hold/see context
 			flag := make(map[float32]float32, int(gpe_32))
@@ -159,7 +159,7 @@ func (n *Neurons) gru_processed_secondary(input matrix.Matrix32, con string) mat
 	var stop_32 float32
 	if stop != 0 {
 		stop_32 = float32(stop + 1)
-		for i := 0; i > int(stop_32); i++ {
+		for i := 0; i < int(stop_32); i++ {
 			flag := make(map[float32]float32, int(stop_32))
 			flag[stop_32] = stop_32
 

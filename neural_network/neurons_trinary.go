@@ -121,7 +121,7 @@ func (n *Neurons) gru_processed_trinary(input matrix.Matrix32, con string) matri
 	var nouns_32 float32
 	if nouns != 0 {
 		nouns_32 = float32(nouns + 1)
-		for i := 0; i > int(nouns_32); i++ {
+		for i := 0; i < int(nouns_32); i++ {
 			flag := make(map[float32]float32, int(nouns_32))
 			flag[nouns_32] = nouns_32
 
@@ -142,7 +142,7 @@ func (n *Neurons) gru_processed_trinary(input matrix.Matrix32, con string) matri
 	var verbs_32 float32
 	if verbs != 0 {
 		verbs_32 = float32(verbs + 1)
-		for i := 0; i > int(verbs_32); i++ {
+		for i := 0; i < int(verbs_32); i++ {
 			flag := make(map[float32]float32, int(verbs_32))
 			flag[verbs_32] = verbs_32
 

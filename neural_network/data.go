@@ -71,7 +71,8 @@ func (v *Variables) SigmoidDerivative(x float64) float64 {
 
 // the natural log of a constant, each log is equal to e (2.718...)
 func (v *Variables) Log(x float64) float64 {
-	return math.Log(x)
+	w := Weights{}
+	return math.Log(x + float64(w.Epsilon()))
 }
 
 // Weights and biases are random values of 32bit floats subtracting 0.5

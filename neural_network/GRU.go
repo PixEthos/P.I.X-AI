@@ -172,32 +172,15 @@ func (l *Layers) GRU_Layers() mat.Matrix32 {
 // layer processing; which adds in the layering, than the input for the processing
 func (l *Layers) GRU_layer_processing(input mat.Matrix32) mat.Matrix32 {
 	w := Weights{}
+	mat32 := mat.Matrix{}
 	weight := w.Weight(10)                      // weight randomization for division
 	layers := l.GRU_Layers()                    // layers
 	processed := l.GRU_processed(input, weight) // processing of the inputs/values
 
-	// basically, this appends the values to a third matrix
-	processed_layers := make(mat.Matrix32, len(layers))
-	for i := range layers {
-		processed_layers = make(mat.Matrix32, len(layers))
-
-		// checks
-		for x := range layers[i] {
-
-			// if the length is greater than 0; than it's appended
-			if len(layers) > 0 {
-				layers[x] = append(layers[x], float32(processed))
-			}
-
-			// appending the layers to the processed_layers matrix
-			processed_layers = append(processed_layers, layers...)
-
-			// 0 check, you _can_ check for a nil; but this is specifically to check for a 0 length
-			if len(processed_layers) == 0 {
-				processed_layers[x] = processed_layers[0]
-			}
-		}
-	}
+	// values
+	processed_layers := mat32.Matrix32bit(layers)
+	value := make([][]float32, int(processed))
+	processed_layers = append(processed_layers, value...)
 
 	// checking for nil
 	if processed_layers != nil {
@@ -210,31 +193,14 @@ func (l *Layers) GRU_layer_processing(input mat.Matrix32) mat.Matrix32 {
 // layer processing; which adds in the layering, than the input for the processing
 func (l *Layers) GRU_layer_processing_matrix(input mat.Matrix32) mat.Matrix32 {
 	w := Weights{}
+	mat32 := mat.Matrix{}
 	weight := w.Weight(10)                             // weight randomization for division
 	layers := l.GRU_Layers()                           // layers
 	processed := l.GRU_processed_matrix(input, weight) // processing of the inputs/values
 
-	// basically, this appends the values to a third matrix
-	processed_layers := make(mat.Matrix32, len(layers))
-	for i := range layers {
-
-		// checks
-		for x := range layers[i] {
-
-			// if the length is greater than 0 and processed has the same length as layers; then it's appended
-			if len(layers) > 0 && len(layers[x]) > x {
-				layers[x] = append(layers[x], processed[x][i])
-			}
-
-			// appending the layers to the processed_layers matrix
-			processed_layers = append(processed_layers, layers...)
-
-			// 0 check, you _can_ check for a nil; but this is specifically to check for a 0 length
-			if len(processed_layers) == 0 {
-				processed_layers[x] = processed_layers[0]
-			}
-		}
-	}
+	// processing
+	added_layers := mat32.Matrix32Addition(layers, processed)
+	processed_layers := mat32.Matrix32bit(added_layers)
 
 	// checking for nil
 	if processed_layers != nil {
@@ -294,6 +260,7 @@ func (l *Layers) GRU_sigmoid(input mat.Matrix32, val string) float64 {
 
 	// essentially, this is adding the output values to a sigmoid
 	output := l.GRU_layer_output(input, val)
+	log.Println("GRU output: ", output)
 	for i := range output {
 
 		// making an output array

@@ -90,20 +90,19 @@ func (nr *NotRecognized) Values() error {
 	return err
 }
 
-func (n *Neurons) GRUActivation(input matrix.Matrix32, in string) {
+func (n *Neurons) GRUActivation(input matrix.Matrix32, in string) (float64, float64, float64) {
 	l := Layers{}
 
 	gru_pri := n.gru_processed(input, in)
-	primary := l.GRU_sigmoid(gru_pri, "float")
-	fmt.Println("GRU_primary_set: ", primary)
+	primary := l.GRU_sigmoid(gru_pri, "float64")
 
 	gru_sec := n.gru_processed_secondary(input, in)
-	secondary := l.GRU_sigmoid(gru_sec, "float")
-	fmt.Println("GRU_secondary_set: ", secondary)
+	secondary := l.GRU_sigmoid(gru_sec, "float64")
 
 	gru_tri := n.gru_processed_trinary(input, in)
-	trinary := l.GRU_sigmoid(gru_tri, "float")
-	fmt.Println("GRU_trinary_set: ", trinary)
+	trinary := l.GRU_sigmoid(gru_tri, "float64")
+
+	return primary, secondary, trinary
 }
 
 func (n *Neurons) NeuronActivation(input matrix.Matrix32, total float32) {
@@ -212,9 +211,6 @@ func (n *Neurons) NetworkLearning(in string) (float64, error) {
 
 	// neuron calcs
 	n.NeuronActivation(inputs, total)
-
-	// GRU
-	n.GRUActivation(inputs, in)
 
 	// calculations
 	w.prediction = correct / float64(total)          // predictive

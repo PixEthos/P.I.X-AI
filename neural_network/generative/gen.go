@@ -90,14 +90,21 @@ func (Generative) Chain(order int) *Generative {
 }
 
 // GRU
-func (Generative) GRU_layers(length int, input string) {
+func (Generative) GRU_layers(length int, input string) float64 {
 
 	// matrix
 	matrix := matrix.Matrix32{{float32(length)}}
 	variable := mat32.Matrix32bit(matrix)
 
 	// GRU activation layers
-	neurons.GRUActivation(variable, input)
+	primary, secondary, trinary := neurons.GRUActivation(variable, input)
+	endpoint := primary + secondary + trinary
+
+	log.Println("GRU_primary: ", primary)
+	log.Println("GRU_seconary: ", secondary)
+	log.Println("GRU_trinary: ", trinary)
+
+	return endpoint
 }
 
 // building
@@ -198,6 +205,7 @@ func (chain *Generative) MarkovChains(input string) []string {
 	split := chain.Splitting(input)
 	enums := chain.Enum(split)
 	enum := conv.ArraytoString(enums)
+	chain.GRU_layers(len(enum), split)
 	add := chain.Adding(10, enum)
 
 	for i := range add {
