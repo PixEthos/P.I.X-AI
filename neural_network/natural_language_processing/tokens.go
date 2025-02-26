@@ -232,7 +232,7 @@ func (e *Enumerate) Enumeration(input string) []string {
 			enum[value] = caller.val[value]
 		}
 
-		if enum != nil {
+		if len(enum) != 0 {
 			return enum
 		}
 	}

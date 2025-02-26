@@ -75,10 +75,10 @@ func (n *Neurons) encapsulated_secondary(count uint32) matrix.Matrix32 {
 }
 
 // gru layering
-func (n *Neurons) GRU_secondary(input matrix.Matrix32) matrix.Matrix32 {
+func (n *Neurons) GRU_secondary(input matrix.Matrix32, x string) matrix.Matrix32 {
 	l := Layers{}
 
-	gru_sec := l.GRU_activation(100, 10, input, "float")
+	gru_sec := l.GRU_activation(100, 10, input, "float", x)
 	if gru_sec != nil {
 		return gru_sec
 	}
@@ -121,8 +121,9 @@ what happens next? It will be matched with a map.
 
 See? That simple
 */
-func (n *Neurons) gru_processed_secondary(input matrix.Matrix32, con string) matrix.Matrix32 {
-	output := n.GRU_secondary(input)
+func (n *Neurons) Gru_processed_secondary(input matrix.Matrix32, con string) (matrix.Rune, matrix.Matrix32) {
+	layer := Layers{}
+	output := n.GRU_secondary(input, con)
 
 	// GPE
 	// calling predictive pieces
@@ -175,9 +176,11 @@ func (n *Neurons) gru_processed_secondary(input matrix.Matrix32, con string) mat
 		}
 	}
 
-	if output != nil {
-		return output
+	out := layer.GRU_rune_variable(con, output)
+
+	if out != nil {
+		return out, output
 	}
 
-	return nil
+	return nil, nil
 }

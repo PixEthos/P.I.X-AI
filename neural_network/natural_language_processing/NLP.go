@@ -22,7 +22,7 @@ import (
 	"strconv"
 
 	// AI
-	"pixai/data/cache"
+
 	encode "pixai/data/encoding"
 	// ui
 )
@@ -32,7 +32,7 @@ import (
 
 type NLP struct {
 	valStr string
-	Input string
+	Input  string
 }
 
 type Input struct{}
@@ -107,10 +107,8 @@ func (nlp *NLP) Scanner(val string) string {
 func (nlp *NLP) NLPinit(val string) (string, error) {
 	var err error
 
-	cachestring := cache.RegCache[string, string]()
 	output := nlp.Scanner(val)
 
-	cachestring.SetReg(output, "output")
 	if len(output) != 0 {
 		return output, nil
 	}

@@ -17,14 +17,12 @@ import (
 
 	// std
 	"fmt"
-	"image/color"
 	"log"
 	"os"
 
 	// fyne
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 
@@ -131,10 +129,6 @@ func (ui *UserInterface) ApplicationWindow() {
 	draw_input.TextStyle.Bold = true
 	draw_input.TextStyle.Symbol = true
 
-	// input canvas
-	new_input := canvas.NewText(input.Text, color.White)
-	new_input.TextSize = 22
-
 	// output labels
 	true_output := widget.NewLabel("Output: ")
 	draw_output := widget.NewLabel("")
@@ -143,15 +137,11 @@ func (ui *UserInterface) ApplicationWindow() {
 	draw_output.TextStyle.Bold = true
 	draw_output.TextStyle.Symbol = true
 
-	// output canvas
-	new_output := canvas.NewText(ui.Output, color.White)
-	new_output.TextSize = 22
-
 	// container
 	content := container.NewVBox(
 		input,
-		true_input, draw_input, new_input,
-		true_output, draw_output, new_output,
+		true_input, draw_input,
+		true_output, draw_output,
 		widget.NewButton("send", func() {
 			draw_input.SetText(input.Text)
 

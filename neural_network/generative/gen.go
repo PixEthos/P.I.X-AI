@@ -41,6 +41,7 @@ var (
 	variables = information.Variables{} // Variables for the neural_network
 	weights   = information.Weights{}   // Randomness and weights
 	neurons   = information.Neurons{}   // Neuron groups
+	layer     = information.Layers{}    // GRU layering
 
 	// matrix handling
 	mat32 = matrix.Matrix{} // Matrix
@@ -83,6 +84,40 @@ func (p Prefix) Merge(input string) {
 	}
 }
 
+// decoding
+func (g *Generative) GRU_decode(val matrix.Rune, input string) string {
+	decode := layer.GRU_rune_decode(input, val)
+	if len(decode) != 0 {
+		return decode
+	}
+
+	return ""
+}
+
+func (g *Generative) GRUActivation(input matrix.Matrix32, in string) (float64, float64, float64, 
+	string, string, string) {
+
+	GRU, gru_pri := neurons.Gru_processed(input, in)
+	primary := layer.GRU_sigmoid(gru_pri, "float64", in)
+	val := g.GRU_decode(GRU, in)
+	log.Println("GRU: ", val)
+	log.Println("ASCII: ", GRU)
+
+	GRU_2, gru_sec := neurons.Gru_processed_secondary(input, in)
+	secondary := layer.GRU_sigmoid(gru_sec, "float64", in)
+	val1 := g.GRU_decode(GRU_2, in)
+	log.Println("GRU_2: ", val1)
+	log.Println("ASCII: ", GRU_2)
+
+	GRU_3, gru_tri := neurons.Gru_processed_trinary(input, in)
+	trinary := layer.GRU_sigmoid(gru_tri, "float64", in)
+	val2 := g.GRU_decode(GRU_3, in)
+	log.Println("GRU_3: ", val2)
+	log.Println("ASCII: ", GRU_3)
+
+	return primary, secondary, trinary, val, val1, val2
+}
+
 // chain
 func (Generative) Chain(order int) *Generative {
 	chain := Generative{order: order, frequency: make(map[string][]string)}
@@ -90,14 +125,14 @@ func (Generative) Chain(order int) *Generative {
 }
 
 // GRU
-func (Generative) GRU_layers(length int, input string) float64 {
+func (g *Generative) GRU_layers(length int, input string) float64 {
 
 	// matrix
 	matrix := matrix.Matrix32{{float32(length)}}
 	variable := mat32.Matrix32bit(matrix)
 
 	// GRU activation layers
-	primary, secondary, trinary := neurons.GRUActivation(variable, input)
+	primary, secondary, trinary, _, _, _ := g.GRUActivation(variable, input)
 	endpoint := primary + secondary + trinary
 
 	log.Println("GRU_primary: ", primary)
@@ -162,7 +197,7 @@ func (g *Generative) Concatinate(input1, input2 []string) []string {
 
 // split
 func (g *Generative) Splitting(input string) string {
-	split := tokens.Document(input)
+	split := tokens.SplitTokens(input)
 	var_to_string := conv.ArraytoString(split)
 
 	if len(var_to_string) != 0 {

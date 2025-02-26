@@ -169,17 +169,42 @@ func (l *Layers) GRU_Layers() mat.Matrix32 {
 	return nil
 }
 
+// rune decoding
+func (l *Layers) GRU_rune_decode(input string, val mat.Rune) string {
+	Rune := mat.Matrix{}
+
+	output := Rune.Decoding(val, input)
+	if len(output) != 0 {
+		return output
+	}
+
+	return ""
+}
+
+// rune processing
+func (l *Layers) GRU_rune_variable(input string, val mat.Matrix32) mat.Rune {
+	Rune := mat.Matrix{}
+
+	output := Rune.Rune(val, input)
+	if output != nil {
+		return output
+	}
+
+	return nil
+}
+
 // layer processing; which adds in the layering, than the input for the processing
-func (l *Layers) GRU_layer_processing(input mat.Matrix32) mat.Matrix32 {
+func (l *Layers) GRU_layer_processing(input mat.Matrix32, x string) mat.Matrix32 {
 	w := Weights{}
 	mat32 := mat.Matrix{}
 	weight := w.Weight(10)                      // weight randomization for division
 	layers := l.GRU_Layers()                    // layers
-	processed := l.GRU_processed(input, weight) // processing of the inputs/values
+	processed := l.GRU_processed(layers, weight) // processing of the inputs/values
+	Rune := l.GRU_rune_variable(x, input)
 
 	// values
 	processed_layers := mat32.Matrix32bit(layers)
-	value := make([][]float32, int(processed))
+	value := make([][]float32, len(Rune) + int(processed))
 	processed_layers = append(processed_layers, value...)
 
 	// checking for nil
@@ -191,15 +216,18 @@ func (l *Layers) GRU_layer_processing(input mat.Matrix32) mat.Matrix32 {
 }
 
 // layer processing; which adds in the layering, than the input for the processing
-func (l *Layers) GRU_layer_processing_matrix(input mat.Matrix32) mat.Matrix32 {
+func (l *Layers) GRU_layer_processing_matrix(input mat.Matrix32, x string) mat.Matrix32 {
 	w := Weights{}
 	mat32 := mat.Matrix{}
 	weight := w.Weight(10)                             // weight randomization for division
 	layers := l.GRU_Layers()                           // layers
 	processed := l.GRU_processed_matrix(input, weight) // processing of the inputs/values
+	Rune := l.GRU_rune_variable(x, input)
 
 	// processing
-	added_layers := mat32.Matrix32Addition(layers, processed)
+	processing_layers := make([][]float32, len(Rune))
+	processing_layers = append(processing_layers, processed...)
+	added_layers := mat32.Matrix32Addition(layers, processing_layers)
 	processed_layers := mat32.Matrix32bit(added_layers)
 
 	// checking for nil
@@ -216,18 +244,18 @@ func (l *Layers) GRU_layer_processing_matrix(input mat.Matrix32) mat.Matrix32 {
 This is the GRU layer process caller; basically just type on the string value either "matrix", or "float"
 for singular, or multireturn for debugging.
 */
-func (l *Layers) GRU_layer_output(input mat.Matrix32, value string) mat.Matrix32 {
+func (l *Layers) GRU_layer_output(input mat.Matrix32, value, x string) mat.Matrix32 {
 	mat32 := mat.Matrix{}
 
 	if value == "matrix" {
-		gru_output_matrix := l.GRU_layer_processing_matrix(input)
+		gru_output_matrix := l.GRU_layer_processing_matrix(input, x)
 		output_matrix := mat32.Matrix32bit(gru_output_matrix)
 
 		if output_matrix != nil {
 			return output_matrix
 		}
 	} else if value == "float64" {
-		gru_output := l.GRU_layer_processing(input)
+		gru_output := l.GRU_layer_processing(input, x)
 		output := mat32.Matrix32bit(gru_output)
 
 		if output != nil {
@@ -239,9 +267,9 @@ func (l *Layers) GRU_layer_output(input mat.Matrix32, value string) mat.Matrix32
 }
 
 // output layering (combined)
-func (l *Layers) GRU_layer_output_float(input mat.Matrix32) float64 {
+func (l *Layers) GRU_layer_output_float(input mat.Matrix32, x string) float64 {
 	mat32 := mat.Matrix{}
-	gru_output := l.GRU_layer_processing(input)
+	gru_output := l.GRU_layer_processing(input, x)
 	output_mat := mat32.Matrix32bit(gru_output)
 	output := mat32.Float32Addition(output_mat, input)
 
@@ -253,13 +281,13 @@ func (l *Layers) GRU_layer_output_float(input mat.Matrix32) float64 {
 }
 
 // sigmoid
-func (l *Layers) GRU_sigmoid(input mat.Matrix32, val string) float64 {
+func (l *Layers) GRU_sigmoid(input mat.Matrix32, val, x string) float64 {
 	var sigmoid float64
 
 	v := Variables{}
 
 	// essentially, this is adding the output values to a sigmoid
-	output := l.GRU_layer_output(input, val)
+	output := l.GRU_layer_output(input, val, x)
 	log.Println("GRU output: ", output)
 	for i := range output {
 
@@ -291,9 +319,9 @@ value being the string, this needs to either be "float" or "matrix" for the proc
 
 Example: l.GRU_activation(100, 10, input, "float")
 */
-func (l *Layers) GRU_activation(neurons, layers uint32, input mat.Matrix32, value string) mat.Matrix32 {
+func (l *Layers) GRU_activation(neurons, layers uint32, input mat.Matrix32, value, x string) mat.Matrix32 {
 	l.GRU_layering(neurons, layers)
-	output := l.GRU_layer_output(input, value)
+	output := l.GRU_layer_output(input, value, x)
 
 	if output != nil {
 		return output

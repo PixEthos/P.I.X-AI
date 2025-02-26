@@ -29,7 +29,13 @@ knows whether or not the genuine code itself is updated to the current standard/
 // matrix.go
 package matrix
 
+import (
+	"bytes"
+	"log"
+)
+
 type Matrix32 [][]float32
+type Rune [][]rune
 
 type Matrix struct{}
 
@@ -74,6 +80,8 @@ func (m *Matrix) Matrix32bit(mat Matrix32) Matrix32 {
 
 	if len(mat) != 0 {
 		return mat
+	} else {
+		log.Println("Failure to create matrix")
 	}
 
 	return nil
@@ -98,6 +106,8 @@ func (m *Matrix) Matrix32Addition(mat, mat1 Matrix32) Matrix32 {
 
 	if len(output) != 0 {
 		return output
+	} else {
+		log.Println("Failure to add matrix")
 	}
 
 	return nil
@@ -122,6 +132,8 @@ func (m *Matrix) Float32Addition(mat, mat1 Matrix32) float64 {
 
 	if output != 0 {
 		return output
+	} else {
+		log.Println("Failure to add matrix")
 	}
 
 	return 0
@@ -146,6 +158,8 @@ func (m *Matrix) Matrix32Subtraction(mat, mat1 Matrix32) Matrix32 {
 
 	if len(output) != 0 {
 		return output
+	} else {
+		log.Println("Failure to subtract matrix")
 	}
 
 	return nil
@@ -173,6 +187,8 @@ func (m *Matrix) Matrix32Divide(mat, mat1 Matrix32) Matrix32 {
 
 	if len(output) != 0 {
 		return output
+	} else {
+		log.Println("Failure to divide matrix")
 	}
 
 	return nil
@@ -200,9 +216,57 @@ func (m *Matrix) Matrix32Multiply(mat, mat1 Matrix32) Matrix32 {
 
 	if len(output) != 0 {
 		return output
+	} else {
+		log.Println("Failure to multiply matrix")
 	}
 
 	return nil
+}
+
+// rune matrix handling
+func (m *Matrix) Rune(mat Matrix32, input string) Rune {
+	input_val := []byte(input)
+	matrix := make([][]rune, len(mat))
+	for _, value := range bytes.Split(input_val, []byte("\n")) {
+		if len(value) == 0 {
+			continue
+		}
+
+		row := make([]rune, 0)
+		for _, val := range string(input_val) {
+			row = append(row, val)
+		}
+
+		matrix = append(matrix, row)
+	}
+
+	if matrix != nil {
+		return matrix
+	} else {
+		log.Println("Failure to generate rune")
+	}
+
+	return nil
+}
+
+func (m *Matrix) Decoding(mat Rune, input string) string {
+	var output string
+	input_val := []byte(input)
+	for i := range mat {
+		for _, x := range input_val {
+			output = string(rune(x))
+			if len(output) == 0 {
+				log.Println("Decoding failure", i)
+				break
+			}
+		}
+	}
+
+	if len(output) != 0 {
+		return output
+	}
+
+	return ""
 }
 
 /* The 32bit, and 64bit are split for good reasons - one of them being safety.
