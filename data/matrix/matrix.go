@@ -254,7 +254,7 @@ func (m *Matrix) Decoding(mat Rune, input string) string {
 	input_val := []byte(input)
 	for i := range mat {
 		for _, x := range input_val {
-			output = string(rune(x))
+			output += string(rune(x))
 			if len(output) == 0 {
 				log.Println("Decoding failure", i)
 				break

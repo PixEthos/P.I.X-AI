@@ -132,8 +132,16 @@ func (g *Generative) GRU_layers(length int, input string) float64 {
 	variable := mat32.Matrix32bit(matrix)
 
 	// GRU activation layers
-	primary, secondary, trinary, _, _, _ := g.GRUActivation(variable, input)
+	primary, secondary, trinary, 
+	val, val1, val2 := g.GRUActivation(variable, input)
+	output := []string{val, val1, val2}
 	endpoint := primary + secondary + trinary
+
+	output_1 := Prefix.Join(output, val)
+	output_2 := Prefix.Join(output, val1)
+	output_3 := Prefix.Join(output, val2)
+
+	log.Println("Combined output: ", output_1, output_2, output_3)
 
 	log.Println("GRU_primary: ", primary)
 	log.Println("GRU_seconary: ", secondary)
