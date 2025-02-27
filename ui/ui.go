@@ -96,8 +96,12 @@ func ApplicationInit(input string) string {
 // input
 func (ui *UserInterface) ApplicationInput() string {
 	input.SetPlaceHolder("Input the data/input here")
-	if len(input.Text) != 0 {
+	if len(input.Text) != 0 || len(input.Text) != 255 {
 		return input.Text
+	}
+
+	if len(input.Text) > 256 {
+		log.Println("255 is the limit of characters")
 	}
 
 	return ""

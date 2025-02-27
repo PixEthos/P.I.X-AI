@@ -252,101 +252,11 @@ func (n *Neurons) Input(input matrix.Matrix32, count uint32, val float32) ([][]f
 }
 
 // context holder
-func (n *Neurons) Gru_processed(input matrix.Matrix32, con string) (matrix.Rune, matrix.Matrix32) {
+func (n *Neurons) Gru_processed(val1, val2 float64, input matrix.Matrix32, con string) (matrix.Rune, matrix.Matrix32) {
 	layer := Layers{}
+	mat32 := matrix.Matrix32{{float32(val1), float32(val2)}}
+	input = append(input, mat32...)
 	output := n.GRU_primary(input, con)
-
-	GPE := predict.GPEActivator(con)
-	var gpe_32 float32
-
-	// this gives the context
-	if GPE != 0 {
-		gpe_32 = float32(GPE + 1) // adding a variable
-
-		// checking the context
-		for i := 0; i < int(gpe_32); i++ {
-
-			// making a map to hold/see context
-			flag := make(map[float32]float32, int(gpe_32))
-			flag[gpe_32] = gpe_32
-
-			// boolean checker
-			_, similar := flag[gpe_32]
-
-			for similar {
-				// making and appending the variables
-				geo := make([]float32, int(gpe_32))
-				geo = append(geo, gpe_32)
-				input = append(input, geo)
-				output = append(output, input...)
-				break
-			}
-		}
-	}
-
-	// stopwords
-	stop := predict.STOPWORDActivator(con)
-	var stop_32 float32
-	if stop != 0 {
-		stop_32 = float32(stop + 1)
-		for i := 0; i < int(stop_32); i++ {
-			flag := make(map[float32]float32, int(stop_32))
-			flag[stop_32] = stop_32
-
-			_, similar := flag[stop_32]
-
-			for similar {
-				stop := make([]float32, int(stop_32))
-				stop = append(stop, stop_32)
-				input = append(input, stop)
-				output = append(output, input...)
-				break
-			}
-		}
-	}
-
-	// nouns
-	nouns := predict.NOUNActivator(con)
-	var nouns_32 float32
-	if nouns != 0 {
-		nouns_32 = float32(nouns + 1)
-		for i := 0; i < int(nouns_32); i++ {
-			flag := make(map[float32]float32, int(nouns_32))
-			flag[nouns_32] = nouns_32
-
-			_, similar := flag[nouns_32]
-
-			for similar {
-				nou := make([]float32, int(nouns_32))
-				nou = append(nou, nouns_32)
-				input = append(input, nou)
-				output = append(output, input...)
-				break
-			}
-		}
-	}
-
-	// verbs
-	verbs := predict.VERBActivator(con)
-	var verbs_32 float32
-	if verbs != 0 {
-		verbs_32 = float32(verbs + 1)
-		for i := 0; i < int(verbs_32); i++ {
-			flag := make(map[float32]float32, int(verbs_32))
-			flag[verbs_32] = verbs_32
-
-			_, similar := flag[verbs_32]
-
-			for similar {
-				verb := make([]float32, int(verbs_32))
-				verb = append(verb, verbs_32)
-				input = append(input, verb)
-				output = append(output, input...)
-				break
-			}
-		}
-	}
-
 	out := layer.GRU_rune_variable(con, output)
 
 	if out != nil {

@@ -227,19 +227,25 @@ func (m *Matrix) Matrix32Multiply(mat, mat1 Matrix32) Matrix32 {
 func (m *Matrix) Rune(mat Matrix32, input string) Rune {
 	input_val := []byte(input)
 	matrix := make([][]rune, len(mat))
-	for _, value := range bytes.Split(input_val, []byte("\n")) {
+
+	// splitting the byte
+	output := bytes.Split(input_val, []byte("\n"))
+	for _, value := range output {
 		if len(value) == 0 {
 			continue
 		}
 
+		// row encoding
 		row := make([]rune, 0)
 		for _, val := range string(input_val) {
 			row = append(row, val)
 		}
 
+		// appending to the rune
 		matrix = append(matrix, row)
 	}
 
+	// nil check
 	if matrix != nil {
 		return matrix
 	} else {
@@ -249,12 +255,21 @@ func (m *Matrix) Rune(mat Matrix32, input string) Rune {
 	return nil
 }
 
+// decoding the output
 func (m *Matrix) Decoding(mat Rune, input string) string {
 	var output string
 	input_val := []byte(input)
+
+	// itteration
 	for i := range mat {
+
+		// grabbing byte value
 		for _, x := range input_val {
+
+			// concatinate
 			output += string(rune(x))
+
+			// empty check
 			if len(output) == 0 {
 				log.Println("Decoding failure", i)
 				break

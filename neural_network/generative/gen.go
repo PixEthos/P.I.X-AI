@@ -33,9 +33,10 @@ import (
 // naming vars
 var (
 	// natural language processing
-	tokens = natural.NLP{}        // tokens
-	enum   = natural.Enumerate{}  // enumeration
-	conv   = natural.Conversion{} // Conversion variables
+	tokens  = natural.NLP{}        // tokens
+	enum    = natural.Enumerate{}  // enumeration
+	conv    = natural.Conversion{} // Conversion variables
+	context = natural.Predictive{} // Predictive
 
 	// data processing
 	variables = information.Variables{} // Variables for the neural_network
@@ -94,28 +95,11 @@ func (g *Generative) GRU_decode(val matrix.Rune, input string) string {
 	return ""
 }
 
-func (g *Generative) GRUActivation(input matrix.Matrix32, in string) (float64, float64, float64, 
-	string, string, string) {
-
-	GRU, gru_pri := neurons.Gru_processed(input, in)
-	primary := layer.GRU_sigmoid(gru_pri, "float64", in)
-	val := g.GRU_decode(GRU, in)
-	log.Println("GRU: ", val)
-	log.Println("ASCII: ", GRU)
-
-	GRU_2, gru_sec := neurons.Gru_processed_secondary(input, in)
-	secondary := layer.GRU_sigmoid(gru_sec, "float64", in)
-	val1 := g.GRU_decode(GRU_2, in)
-	log.Println("GRU_2: ", val1)
-	log.Println("ASCII: ", GRU_2)
-
-	GRU_3, gru_tri := neurons.Gru_processed_trinary(input, in)
-	trinary := layer.GRU_sigmoid(gru_tri, "float64", in)
-	val2 := g.GRU_decode(GRU_3, in)
-	log.Println("GRU_3: ", val2)
-	log.Println("ASCII: ", GRU_3)
-
-	return primary, secondary, trinary, val, val1, val2
+// activation caller
+func (g *Generative) GRUActivation(variable matrix.Matrix32, input string) {
+	g.Primary(variable, input)
+	g.Secondary(variable, input)
+	g.Trinary(variable, input)
 }
 
 // chain
@@ -125,29 +109,12 @@ func (Generative) Chain(order int) *Generative {
 }
 
 // GRU
-func (g *Generative) GRU_layers(length int, input string) float64 {
+func (g *Generative) GRU_layers(length int, input string) {
 
 	// matrix
 	matrix := matrix.Matrix32{{float32(length)}}
 	variable := mat32.Matrix32bit(matrix)
-
-	// GRU activation layers
-	primary, secondary, trinary, 
-	val, val1, val2 := g.GRUActivation(variable, input)
-	output := []string{val, val1, val2}
-	endpoint := primary + secondary + trinary
-
-	output_1 := Prefix.Join(output, val)
-	output_2 := Prefix.Join(output, val1)
-	output_3 := Prefix.Join(output, val2)
-
-	log.Println("Combined output: ", output_1, output_2, output_3)
-
-	log.Println("GRU_primary: ", primary)
-	log.Println("GRU_seconary: ", secondary)
-	log.Println("GRU_trinary: ", trinary)
-
-	return endpoint
+	g.GRUActivation(variable, input)
 }
 
 // building

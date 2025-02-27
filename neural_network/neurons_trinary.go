@@ -113,52 +113,11 @@ func (n *Neurons) processed_trinary(input matrix.Matrix32, count uint32, val flo
 }
 
 // context holder
-func (n *Neurons) Gru_processed_trinary(input matrix.Matrix32, con string) (matrix.Rune, matrix.Matrix32) {
+func (n *Neurons) Gru_processed_trinary(val1 float64, input matrix.Matrix32, con string) (matrix.Rune, matrix.Matrix32) {
 	layer := Layers{}
+	mat32 := matrix.Matrix32{{float32(val1)}}
+	input = append(input, mat32...)
 	output := n.GRU_trinary(input, con)
-
-	// nouns
-	nouns := predict.NOUNActivator(con)
-	var nouns_32 float32
-	if nouns != 0 {
-		nouns_32 = float32(nouns + 1)
-		for i := 0; i < int(nouns_32); i++ {
-			flag := make(map[float32]float32, int(nouns_32))
-			flag[nouns_32] = nouns_32
-
-			_, similar := flag[nouns_32]
-
-			for similar {
-				nou := make([]float32, int(nouns_32))
-				nou = append(nou, nouns_32)
-				input = append(input, nou)
-				output = append(output, input...)
-				break
-			}
-		}
-	}
-
-	// verbs
-	verbs := predict.VERBActivator(con)
-	var verbs_32 float32
-	if verbs != 0 {
-		verbs_32 = float32(verbs + 1)
-		for i := 0; i < int(verbs_32); i++ {
-			flag := make(map[float32]float32, int(verbs_32))
-			flag[verbs_32] = verbs_32
-
-			_, similar := flag[verbs_32]
-
-			for similar {
-				verb := make([]float32, int(verbs_32))
-				verb = append(verb, verbs_32)
-				input = append(input, verb)
-				output = append(output, input...)
-				break
-			}
-		}
-	}
-
 	out := layer.GRU_rune_variable(con, output)
 
 	if out != nil {
