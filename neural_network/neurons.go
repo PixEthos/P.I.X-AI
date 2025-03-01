@@ -252,16 +252,14 @@ func (n *Neurons) Input(input matrix.Matrix32, count uint32, val float32) ([][]f
 }
 
 // context holder
-func (n *Neurons) Gru_processed(val1, val2 float64, input matrix.Matrix32, con string) (matrix.Rune, matrix.Matrix32) {
-	layer := Layers{}
+func (n *Neurons) Gru_processed(val1, val2 float64, input matrix.Matrix32, con string) (matrix.Matrix32) {
 	mat32 := matrix.Matrix32{{float32(val1), float32(val2)}}
-	input = append(input, mat32...)
-	output := n.GRU_primary(input, con)
-	out := layer.GRU_rune_variable(con, output)
+	mat32 = append(mat32, input...)
+	output := n.GRU_primary(mat32, con)
 
-	if out != nil {
-		return out, output
+	if output != nil {
+		return output
 	}
 
-	return nil, nil
+	return nil
 }

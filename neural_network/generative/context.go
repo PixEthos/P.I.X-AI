@@ -29,12 +29,23 @@ func (g *Generative) PrimaryContext(input string) (float64, float64) {
 
 // primary activator
 func (g *Generative) GRU_primary(input matrix.Matrix32, value string) (float64, string) {
+	mat32 := matrix.Matrix{}
+
+	// rune
+	GRU := layer.GRU_rune_variable(value, input)
+	output := mat32.RuneToFloat32(GRU)
+	val := g.GRU_decode(GRU, value)
+
 	// primary
 	gpe, stop := g.PrimaryContext(value)
-	GRU, gru_pri := neurons.Gru_processed(gpe, stop, input, value)
+	gru_pri := neurons.Gru_processed(gpe, stop, output, value)
+
+	// accuracy
 	primary := layer.GRU_sigmoid(gru_pri, "float64", value)
-	val := g.GRU_decode(GRU, value)
+
+	// logs
 	log.Println("GRU: ", val)
+	log.Println("RUNE: ", output)
 	log.Println("ASCII: ", GRU)
 
 	return primary, val
@@ -56,11 +67,19 @@ func (g *Generative) SecondaryContext(input string) float64 {
 }
 
 func (g *Generative) GRU_secondary(input matrix.Matrix32, value string) (float64, string) {
+	// rune
+	GRU_2 := layer.GRU_rune_variable(value, input)
+	output := mat32.RuneToFloat32(GRU_2)
+	val1 := g.GRU_decode(GRU_2, value)
+
 	// secondary
 	nouns := g.SecondaryContext(value)
-	GRU_2, gru_sec := neurons.Gru_processed_secondary(nouns, input, value)
+	gru_sec := neurons.Gru_processed_secondary(nouns, output, value)
+
+	// accuracy
 	secondary := layer.GRU_sigmoid(gru_sec, "float64", value)
-	val1 := g.GRU_decode(GRU_2, value)
+
+	// logs
 	log.Println("GRU_2: ", val1)
 	log.Println("ASCII: ", GRU_2)
 
@@ -82,11 +101,19 @@ func (g *Generative) TrinaryContext(input string) float64 {
 }
 
 func (g *Generative) GRU_trinary(input matrix.Matrix32, value string) (float64, string) {
+	// rune
+	GRU_3 := layer.GRU_rune_variable(value, input)
+	val2 := g.GRU_decode(GRU_3, value)
+	output := mat32.RuneToFloat32(GRU_3)
+
 	// trinary
 	verbs := g.TrinaryContext(value)
-	GRU_3, gru_tri := neurons.Gru_processed_trinary(verbs, input, value)
+	gru_tri := neurons.Gru_processed_trinary(verbs, output, value)
+
+	// accuracy
 	trinary := layer.GRU_sigmoid(gru_tri, "float64", value)
-	val2 := g.GRU_decode(GRU_3, value)
+
+	// logs
 	log.Println("GRU_3: ", val2)
 	log.Println("ASCII: ", GRU_3)
 

@@ -113,16 +113,14 @@ func (n *Neurons) processed_trinary(input matrix.Matrix32, count uint32, val flo
 }
 
 // context holder
-func (n *Neurons) Gru_processed_trinary(val1 float64, input matrix.Matrix32, con string) (matrix.Rune, matrix.Matrix32) {
-	layer := Layers{}
+func (n *Neurons) Gru_processed_trinary(val1 float64, input matrix.Matrix32, con string) (matrix.Matrix32) {
 	mat32 := matrix.Matrix32{{float32(val1)}}
-	input = append(input, mat32...)
-	output := n.GRU_trinary(input, con)
-	out := layer.GRU_rune_variable(con, output)
+	mat32 = append(mat32, input...)
+	output := n.GRU_trinary(mat32, con)
 
-	if out != nil {
-		return out, output
+	if output != nil {
+		return output
 	}
 
-	return nil, nil
+	return nil
 }

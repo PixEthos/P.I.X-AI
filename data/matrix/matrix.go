@@ -32,6 +32,7 @@ package matrix
 import (
 	"bytes"
 	"log"
+	"strconv"
 )
 
 type Matrix32 [][]float32
@@ -255,6 +256,32 @@ func (m *Matrix) Rune(mat Matrix32, input string) Rune {
 	return nil
 }
 
+// conversion
+func (m *Matrix) RuneToFloat32(mat Rune) Matrix32 {
+	mat32 := make(Matrix32, len(mat))
+	for i := range mat32 {
+		mat[i] = append(mat[i], rune(len(mat32[i][:])))
+		for x := range mat {
+			output := strconv.Itoa(x)
+			val, err := strconv.Atoi(output)
+			if err != nil {
+				log.Println("Error converting rune to int", err)
+			}
+
+			mat32_1 := make(Matrix32, val)
+			if len(mat32_1) != 0 {
+				mat32 = append(mat32, mat32_1...)
+			}
+		}
+	}
+
+	if len(mat32) != 0 {
+		return mat32
+	}
+
+	return nil
+}
+
 // decoding the output
 func (m *Matrix) Decoding(mat Rune, input string) string {
 	var output string
@@ -283,37 +310,3 @@ func (m *Matrix) Decoding(mat Rune, input string) string {
 
 	return ""
 }
-
-/* The 32bit, and 64bit are split for good reasons - one of them being safety.
-
- I decided to use append in this case - especially for a heap of the framework I am building for this
- which as a result had lead me down rabbitholes of poorly implemented code. Or even reading downright
- hilarious implementation: "I need to use goroutines for matrix integration, for school"
-
- The fuck? Whomever is the actual professor that requires that; ask them why simplicity isn't
- the goal, and why complexity is the ideal.
-
- Regardless; the implementation I kept finding was the following:
- 'mat[][] = mat1[][] + mat2[][]'
- For base arrays, this is fine depending on the context. But these are often not even allocated correctly
- you actually get basic results where the arrays are already standard within the algorithms provided.
-
- So what happens is you are ending up with memory allocation issues, and sometimes irritating troubleshooting
- and debugging - often leading to irritation. So, how about append?
-
- Well, I decided to start using append for more complex work within the algorithm - this is the result
- of me requiring dynamic allocation. Yes, append leads to more memory being allocated, but that isn't the sole
- reason - it's a bit safer actually. Now, let's say I implement this with goroutines - well, I can.
-
- But where exactly is the line between 'can' and 'should'? Well, I 'should' do so eventually.
-
- The main reason is for concurrency. So something like this:
- func (m* Matrix_Struct) Matrix32bit(mat Matrix32, output chan [][]float32)
- Than the caller:
- func (m* Matrix_Struct) Matrix32bitCaller(mat Matrix32, output chan [][]float32) Matrix32 {
-	go m.Matrix32bit(mat, output)
-	// than add in the activation here
- }
-
- Though, why don't I do this? Because it's easier for me to develop with simplicity, 'til I need the
- complexity.*/

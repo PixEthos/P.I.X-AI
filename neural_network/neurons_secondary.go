@@ -121,16 +121,14 @@ what happens next? It will be matched with a map.
 
 See? That simple
 */
-func (n *Neurons) Gru_processed_secondary(val1 float64, input matrix.Matrix32, con string) (matrix.Rune, matrix.Matrix32) {
-	layer := Layers{}
+func (n *Neurons) Gru_processed_secondary(val1 float64, input matrix.Matrix32, con string) (matrix.Matrix32) {
 	mat32 := matrix.Matrix32{{float32(val1)}}
-	input = append(input, mat32...)
-	output := n.GRU_secondary(input, con)
-	out := layer.GRU_rune_variable(con, output)
+	mat32 = append(mat32, input...)
+	output := n.GRU_secondary(mat32, con)
 
-	if out != nil {
-		return out, output
+	if output != nil {
+		return output
 	}
 
-	return nil, nil
+	return nil
 }
