@@ -87,14 +87,10 @@ func (l *Layers) GRU_processed(input mat.Matrix32, val float32) float64 {
 	mat32 := mat.Matrix{}
 
 	// appending the neurons and neuron internals
-	neuron_internal := l.GRU_encapsulated(l.number_of_neurons)
-
-	// neurons
-	neurons := mat32.Matrix32bit(neuron_internal)
-	neuron_input := mat32.Matrix32bit(input)
+	neuron:= l.GRU_encapsulated(l.number_of_neurons)
 
 	// output for the neurons
-	output := mat32.Float32Addition(neuron_input, neurons)
+	output := mat32.Float32Addition(input, neuron)
 
 	if output != 0 {
 		return output
@@ -108,14 +104,10 @@ func (l *Layers) GRU_processed_matrix(input mat.Matrix32, val float32) mat.Matri
 	mat32 := mat.Matrix{}
 
 	// appending the neurons and neuron internals
-	neuron_internal := l.GRU_encapsulated(l.number_of_neurons)
-
-	// neurons
-	neurons := mat32.Matrix32bit(neuron_internal)
-	neuron_input := mat32.Matrix32bit(input)
+	neuron := l.GRU_encapsulated(l.number_of_neurons)
 
 	// output for the neurons
-	output := mat32.Matrix32Addition(neuron_input, neurons)
+	output := mat32.Matrix32Addition(input, neuron)
 
 	if output != nil {
 		return output
@@ -196,20 +188,19 @@ func (l *Layers) GRU_rune_variable(input string, val mat.Matrix32) mat.Rune {
 // layer processing; which adds in the layering, than the input for the processing
 func (l *Layers) GRU_layer_processing(input mat.Matrix32, x string) mat.Matrix32 {
 	w := Weights{}
-	mat32 := mat.Matrix{}
+
+	// weights
 	weight := w.Weight(10)                      // weight randomization for division
 	layers := l.GRU_Layers()                    // layers
 	processed := l.GRU_processed(layers, weight) // processing of the inputs/values
-	Rune := l.GRU_rune_variable(x, input)
 
 	// values
-	processed_layers := mat32.Matrix32bit(layers)
-	value := make([][]float32, len(Rune) + int(processed))
-	processed_layers = append(processed_layers, value...)
+	value := make([][]float32, len(layers) + int(processed))
+	layers = append(layers, value...)
 
 	// checking for nil
-	if processed_layers != nil {
-		return processed_layers
+	if layers != nil {
+		return layers
 	}
 
 	return nil
@@ -219,20 +210,20 @@ func (l *Layers) GRU_layer_processing(input mat.Matrix32, x string) mat.Matrix32
 func (l *Layers) GRU_layer_processing_matrix(input mat.Matrix32, x string) mat.Matrix32 {
 	w := Weights{}
 	mat32 := mat.Matrix{}
+
+	// weights
 	weight := w.Weight(10)                             // weight randomization for division
 	layers := l.GRU_Layers()                           // layers
 	processed := l.GRU_processed_matrix(input, weight) // processing of the inputs/values
-	Rune := l.GRU_rune_variable(x, input)
 
 	// processing
-	processing_layers := make([][]float32, len(Rune))
+	processing_layers := make([][]float32, len(processed))
 	processing_layers = append(processing_layers, processed...)
 	added_layers := mat32.Matrix32Addition(layers, processing_layers)
-	processed_layers := mat32.Matrix32bit(added_layers)
 
 	// checking for nil
-	if processed_layers != nil {
-		return processed_layers
+	if added_layers != nil {
+		return added_layers
 	}
 
 	return nil
@@ -245,18 +236,15 @@ This is the GRU layer process caller; basically just type on the string value ei
 for singular, or multireturn for debugging.
 */
 func (l *Layers) GRU_layer_output(input mat.Matrix32, value, x string) mat.Matrix32 {
-	mat32 := mat.Matrix{}
 
 	if value == "matrix" {
-		gru_output_matrix := l.GRU_layer_processing_matrix(input, x)
-		output_matrix := mat32.Matrix32bit(gru_output_matrix)
+		output_matrix := l.GRU_layer_processing_matrix(input, x)
 
 		if output_matrix != nil {
 			return output_matrix
 		}
 	} else if value == "float64" {
-		gru_output := l.GRU_layer_processing(input, x)
-		output := mat32.Matrix32bit(gru_output)
+		output := l.GRU_layer_processing(input, x)
 
 		if output != nil {
 			return output

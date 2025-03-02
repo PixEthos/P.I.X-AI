@@ -121,10 +121,8 @@ what happens next? It will be matched with a map.
 
 See? That simple
 */
-func (n *Neurons) Gru_processed_secondary(val1 float64, input matrix.Matrix32, con string) (matrix.Matrix32) {
-	mat32 := matrix.Matrix32{{float32(val1)}}
-	mat32 = append(mat32, input...)
-	output := n.GRU_secondary(mat32, con)
+func (n *Neurons) Gru_processed_secondary(input matrix.Matrix32, con string) (matrix.Matrix32) {
+	output := n.GRU_secondary(input, con)
 
 	if output != nil {
 		return output

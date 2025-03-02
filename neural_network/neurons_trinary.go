@@ -113,10 +113,8 @@ func (n *Neurons) processed_trinary(input matrix.Matrix32, count uint32, val flo
 }
 
 // context holder
-func (n *Neurons) Gru_processed_trinary(val1 float64, input matrix.Matrix32, con string) (matrix.Matrix32) {
-	mat32 := matrix.Matrix32{{float32(val1)}}
-	mat32 = append(mat32, input...)
-	output := n.GRU_trinary(mat32, con)
+func (n *Neurons) Gru_processed_trinary(input matrix.Matrix32, con string) (matrix.Matrix32) {
+	output := n.GRU_trinary(input, con)
 
 	if output != nil {
 		return output

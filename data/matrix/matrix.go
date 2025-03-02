@@ -32,7 +32,6 @@ package matrix
 import (
 	"bytes"
 	"log"
-	"strconv"
 )
 
 type Matrix32 [][]float32
@@ -257,20 +256,23 @@ func (m *Matrix) Rune(mat Matrix32, input string) Rune {
 }
 
 // conversion
-func (m *Matrix) RuneToFloat32(mat Rune) Matrix32 {
+func (m *Matrix) RuneToMatrix32(mat Rune) Matrix32 {
+	// matrix
 	mat32 := make(Matrix32, len(mat))
+	mat32_1 := make(Matrix32, len(mat32))
+
+	// appending and rune
 	for i := range mat32 {
 		mat[i] = append(mat[i], rune(len(mat32[i][:])))
 		for x := range mat {
-			output := strconv.Itoa(x)
-			val, err := strconv.Atoi(output)
-			if err != nil {
-				log.Println("Error converting rune to int", err)
+			mat32[x] = append(mat32[x], float32(len(mat)))
+			if len(mat32) != 0 {
+				mat32 = append(mat32, mat32[i])
+				mat32 = append(mat32, mat32_1...)
 			}
 
-			mat32_1 := make(Matrix32, val)
-			if len(mat32_1) != 0 {
-				mat32 = append(mat32, mat32_1...)
+			if len(mat32) == 0 {
+				break
 			}
 		}
 	}

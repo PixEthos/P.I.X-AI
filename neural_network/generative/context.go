@@ -33,19 +33,18 @@ func (g *Generative) GRU_primary(input matrix.Matrix32, value string) (float64, 
 
 	// rune
 	GRU := layer.GRU_rune_variable(value, input)
-	output := mat32.RuneToFloat32(GRU)
+	output := mat32.RuneToMatrix32(GRU)
 	val := g.GRU_decode(GRU, value)
 
 	// primary
-	gpe, stop := g.PrimaryContext(value)
-	gru_pri := neurons.Gru_processed(gpe, stop, output, value)
+	g.PrimaryContext(value)
+	gru_pri := neurons.Gru_processed(output, value)
 
 	// accuracy
 	primary := layer.GRU_sigmoid(gru_pri, "float64", value)
 
 	// logs
 	log.Println("GRU: ", val)
-	log.Println("RUNE: ", output)
 	log.Println("ASCII: ", GRU)
 
 	return primary, val
@@ -69,12 +68,12 @@ func (g *Generative) SecondaryContext(input string) float64 {
 func (g *Generative) GRU_secondary(input matrix.Matrix32, value string) (float64, string) {
 	// rune
 	GRU_2 := layer.GRU_rune_variable(value, input)
-	output := mat32.RuneToFloat32(GRU_2)
+	output := mat32.RuneToMatrix32(GRU_2)
 	val1 := g.GRU_decode(GRU_2, value)
 
 	// secondary
-	nouns := g.SecondaryContext(value)
-	gru_sec := neurons.Gru_processed_secondary(nouns, output, value)
+	g.SecondaryContext(value)
+	gru_sec := neurons.Gru_processed_secondary(output, value)
 
 	// accuracy
 	secondary := layer.GRU_sigmoid(gru_sec, "float64", value)
@@ -104,11 +103,11 @@ func (g *Generative) GRU_trinary(input matrix.Matrix32, value string) (float64, 
 	// rune
 	GRU_3 := layer.GRU_rune_variable(value, input)
 	val2 := g.GRU_decode(GRU_3, value)
-	output := mat32.RuneToFloat32(GRU_3)
+	output := mat32.RuneToMatrix32(GRU_3)
 
 	// trinary
-	verbs := g.TrinaryContext(value)
-	gru_tri := neurons.Gru_processed_trinary(verbs, output, value)
+	g.TrinaryContext(value)
+	gru_tri := neurons.Gru_processed_trinary(output, value)
 
 	// accuracy
 	trinary := layer.GRU_sigmoid(gru_tri, "float64", value)
