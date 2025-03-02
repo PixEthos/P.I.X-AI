@@ -1,16 +1,43 @@
 ### TEST BRANTCH! ###
 
+IF YOU INSTALL THIS:
+- There is a limit for the input values to be 255 in length, it's a hard limit at the moment.
+- Working on the Markov chains, but it still is fun to see what it is capable of doing.
+- Matrix handling is still a work in progress.
+- Inputs _ARE_ encrypted, eventually I plan on making sure that logged data is only the outputs, and not the input values. Course, this is the dev branch, so it's ideal to get an idea.
+- Prediction values are basically based on the number / length of the input value. That means you only get a number at this point in time for it.
+- The number of matches the current algorithm can see is about ~1 thousand if I recall.
+
+How would you install and use it?
+1. Clone the repository:
+```
+git clone https://github.com/PixEthos/PixAI.git
+```
+2. Install Golang:
+Fedora:
+```
+dnf install golang
+```
+Debian:
+```
+apt install golang
+```
+Arch:
+```
+pacman -s golang
+```
+3. Open the location of where you installed it:
+```
+cd ~/Documents/PixAI/
+```
+4. Run: "go build ." and it will build the binary.
+
+Or:
+You can run the binary already inside it, usually it's about a week older than the current - but it should work. 
+
+YOU WILL NEED FYNE, you may have issues with development libraries; so it's intended for you to be able to get those development pieces; x11-devel particularly.
+
+NOTE:
 This branch is just the 'development branch', there's no generative for the AI as of now.
-However, there's a lot I am working on, such as:
-1. Markov chains, something I'm going to be working on with this, is implementing a markov chain system
-2. Rewriting the token system, at the moment it doesn't really enumerate. So, I'll be working on that piece of the algorithm, basically encoding/decoding each variable. So, WIP on that piece.
-3. Giving it more data to use; instead of just a basic piece, I'm going to be using the document directory for the training data. It's not doing anything, I did take that out, but it is there for the sake of later implementation.
-4. More word matching, it currently understands around roughly 500 words, but it's not even 'understanding' the words; it basically can just match them. There's going to be work done there to optimize the data a bit better for matching, and improving how many words it can understand.
 
 This is an early, early, early alpha release for those curious about what I had been working on.
-
-The current 'release' here is something I felt I may as well create given all the crap I've been working on – this algorithm itself has been taking me a small while to build; but I have been persistent in making it.
-
-Currently, all it does is do basic predictions, matching/filtering is a bit of a mess but that is still being worked on, and with all that; it also basically tries to figure out it's own output.
-
-The algorithm _does_ use a GRU based system, more or less, it's crudly implemented at the moment.
