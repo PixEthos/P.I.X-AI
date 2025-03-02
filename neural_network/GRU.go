@@ -69,6 +69,10 @@ func (l *Layers) GRU_encapsulated(count uint32) mat.Matrix32 {
 			{weight, weight1}, {weight2, weight3}, {weight4, weight5},
 		}
 		encap = append(encap, internals...)
+
+		if len(encap) > len(internals) {
+			break
+		}
 	}
 
 	if encap != nil {
@@ -313,7 +317,7 @@ Example: l.GRU_activation(100, 10, input, "float")
 func (l *Layers) GRU_activation(neurons, layers uint32, input mat.Matrix32, value, x string) mat.Matrix32 {
 	l.GRU_layering(neurons, layers)
 	output := l.GRU_layer_output(input, value, x)
-	
+
 
 	if output != nil {
 		return output
