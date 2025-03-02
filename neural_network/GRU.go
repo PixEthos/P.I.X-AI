@@ -69,10 +69,6 @@ func (l *Layers) GRU_encapsulated(count uint32) mat.Matrix32 {
 			{weight, weight1}, {weight2, weight3}, {weight4, weight5},
 		}
 		encap = append(encap, internals...)
-
-		if len(internals) >= len(encap) {
-			break
-		}
 	}
 
 	if encap != nil {
@@ -87,7 +83,7 @@ func (l *Layers) GRU_processed(input mat.Matrix32, val float32) float64 {
 	mat32 := mat.Matrix{}
 
 	// appending the neurons and neuron internals
-	neuron:= l.GRU_encapsulated(l.number_of_neurons)
+	neuron := l.GRU_encapsulated(l.number_of_neurons)
 
 	// output for the neurons
 	output := mat32.Float32Addition(input, neuron)
@@ -188,14 +184,18 @@ func (l *Layers) GRU_rune_variable(input string, val mat.Matrix32) mat.Rune {
 // layer processing; which adds in the layering, than the input for the processing
 func (l *Layers) GRU_layer_processing(input mat.Matrix32, x string) mat.Matrix32 {
 	w := Weights{}
+	mat32 := mat.Matrix{}
 
 	// weights
-	weight := w.Weight(10)                      // weight randomization for division
-	layers := l.GRU_Layers()                    // layers
+	weight := w.Weight(10)                       // weight randomization for division
+	layers := l.GRU_Layers()                     // layers
 	processed := l.GRU_processed(layers, weight) // processing of the inputs/values
 
+	// matrix
+	process_layers := mat32.Matrix32bit(layers)
+
 	// values
-	value := make([][]float32, len(layers) + int(processed))
+	value := make([][]float32, len(process_layers)+int(processed))
 	layers = append(layers, value...)
 
 	// checking for nil
@@ -216,10 +216,14 @@ func (l *Layers) GRU_layer_processing_matrix(input mat.Matrix32, x string) mat.M
 	layers := l.GRU_Layers()                           // layers
 	processed := l.GRU_processed_matrix(input, weight) // processing of the inputs/values
 
+	// matrix
+	process_layers := mat32.Matrix32bit(processed)
+	input_layer := mat32.Matrix32bit(layers)
+
 	// processing
-	processing_layers := make([][]float32, len(processed))
-	processing_layers = append(processing_layers, processed...)
-	added_layers := mat32.Matrix32Addition(layers, processing_layers)
+	processing_layers := make([][]float32, len(process_layers))
+	processing_layers = append(processing_layers, process_layers...)
+	added_layers := mat32.Matrix32Addition(input_layer, process_layers)
 
 	// checking for nil
 	if added_layers != nil {
@@ -276,7 +280,6 @@ func (l *Layers) GRU_sigmoid(input mat.Matrix32, val, x string) float64 {
 
 	// essentially, this is adding the output values to a sigmoid
 	output := l.GRU_layer_output(input, val, x)
-	log.Println("GRU output: ", output)
 	for i := range output {
 
 		// making an output array

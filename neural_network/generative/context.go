@@ -19,6 +19,28 @@ import (
 	matrix "pixai/data/matrix"
 )
 
+// gru layering
+func (g *Generative) GRU_pri(input matrix.Matrix32, x string) matrix.Matrix32 {
+
+	gru_sec := layer.GRU_activation(200, 30, input, "float", x)
+	if gru_sec != nil {
+		return gru_sec
+	}
+
+	return nil
+}
+
+// context holder
+func (g *Generative) Gru_processed(input matrix.Matrix32, con string) (matrix.Matrix32) {
+	output := g.GRU_pri(input, con)
+
+	if output != nil {
+		return output
+	}
+
+	return nil
+}
+
 // primary context
 func (g *Generative) PrimaryContext(input string) (float64, float64) {
 	gpe := context.GPEActivator(input)
@@ -38,13 +60,15 @@ func (g *Generative) GRU_primary(input matrix.Matrix32, value string) (float64, 
 
 	// primary
 	g.PrimaryContext(value)
-	gru_pri := neurons.Gru_processed(output, value)
+	gru_pri := g.Gru_processed(output, value)
 
 	// accuracy
 	primary := layer.GRU_sigmoid(gru_pri, "float64", value)
 
 	// logs
-	log.Println("GRU: ", val)
+	log.Println("GRU_1 accuracy:  ", primary)
+	log.Println("GRU_1 processed: ", gru_pri)
+	log.Println("GRU_1: ", val)
 	log.Println("ASCII: ", GRU)
 
 	return primary, val
@@ -59,6 +83,27 @@ func (g *Generative) Primary(input matrix.Matrix32, value string) {
 }
 
 // secondary
+// gru layering
+func (g* Generative) GRU_second(input matrix.Matrix32, x string) matrix.Matrix32 {
+
+	gru_sec := layer.GRU_activation(100, 10, input, "float", x)
+	if gru_sec != nil {
+		return gru_sec
+	}
+
+	return nil
+}
+
+func (g* Generative) Gru_processed_secondary(input matrix.Matrix32, con string) (matrix.Matrix32) {
+	output := g.GRU_second(input, con)
+
+	if output != nil {
+		return output
+	}
+
+	return nil
+}
+
 func (g *Generative) SecondaryContext(input string) float64 {
 	nouns := context.NOUNActivator(input)
 
@@ -73,12 +118,14 @@ func (g *Generative) GRU_secondary(input matrix.Matrix32, value string) (float64
 
 	// secondary
 	g.SecondaryContext(value)
-	gru_sec := neurons.Gru_processed_secondary(output, value)
+	gru_sec := g.Gru_processed_secondary(output, value)
 
 	// accuracy
 	secondary := layer.GRU_sigmoid(gru_sec, "float64", value)
 
 	// logs
+	log.Println("GRU_2 accuracy:  ", secondary)
+	log.Println("GRU_2 processed: ", gru_sec)
 	log.Println("GRU_2: ", val1)
 	log.Println("ASCII: ", GRU_2)
 
@@ -90,6 +137,28 @@ func (g *Generative) Secondary(input matrix.Matrix32, value string) {
 	x := Prefix{char}
 	x.Join(char)
 	x.Merge(value)
+}
+
+// gru layering
+func (g *Generative) GRU_tri(input matrix.Matrix32, x string) matrix.Matrix32 {
+
+	gru_sec := layer.GRU_activation(100, 10, input, "float", x)
+	if gru_sec != nil {
+		return gru_sec
+	}
+
+	return nil
+}
+
+// context holder
+func (g *Generative) Gru_processed_trinary(input matrix.Matrix32, con string) (matrix.Matrix32) {
+	output := g.GRU_tri(input, con)
+
+	if output != nil {
+		return output
+	}
+
+	return nil
 }
 
 // trinary
@@ -107,12 +176,14 @@ func (g *Generative) GRU_trinary(input matrix.Matrix32, value string) (float64, 
 
 	// trinary
 	g.TrinaryContext(value)
-	gru_tri := neurons.Gru_processed_trinary(output, value)
+	gru_tri := g.Gru_processed_trinary(output, value)
 
 	// accuracy
 	trinary := layer.GRU_sigmoid(gru_tri, "float64", value)
 
 	// logs
+	log.Println("GRU_3 accuracy:  ", trinary)
+	log.Println("GRU_3 processed: ", gru_tri)
 	log.Println("GRU_3: ", val2)
 	log.Println("ASCII: ", GRU_3)
 

@@ -74,18 +74,6 @@ func (n *Neurons) encapsulated_trinary(count uint32) matrix.Matrix32 {
 	return nil
 }
 
-// gru layering
-func (n *Neurons) GRU_trinary(input matrix.Matrix32, x string) matrix.Matrix32 {
-	l := Layers{}
-
-	gru_sec := l.GRU_activation(100, 10, input, "float", x)
-	if gru_sec != nil {
-		return gru_sec
-	}
-
-	return nil
-}
-
 // processing
 func (n *Neurons) processed_trinary(input matrix.Matrix32, count uint32, val float32) matrix.Matrix32 {
 	mat32 := matrix.Matrix{}
@@ -104,17 +92,6 @@ func (n *Neurons) processed_trinary(input matrix.Matrix32, count uint32, val flo
 			output = append(output, out)
 		}
 	}
-
-	if output != nil {
-		return output
-	}
-
-	return nil
-}
-
-// context holder
-func (n *Neurons) Gru_processed_trinary(input matrix.Matrix32, con string) (matrix.Matrix32) {
-	output := n.GRU_trinary(input, con)
 
 	if output != nil {
 		return output
