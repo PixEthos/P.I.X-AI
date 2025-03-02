@@ -184,7 +184,6 @@ func (g *Generative) Splitting(input string) string {
 
 func (g *Generative) Enum(input string) []string {
 	enumerate := enum.Enumeration(input)
-	fmt.Println(enumerate)
 	if len(enumerate) != 0 {
 		return enumerate
 	}

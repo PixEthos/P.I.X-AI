@@ -313,6 +313,7 @@ Example: l.GRU_activation(100, 10, input, "float")
 func (l *Layers) GRU_activation(neurons, layers uint32, input mat.Matrix32, value, x string) mat.Matrix32 {
 	l.GRU_layering(neurons, layers)
 	output := l.GRU_layer_output(input, value, x)
+	
 
 	if output != nil {
 		return output

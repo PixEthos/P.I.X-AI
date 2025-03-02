@@ -14,7 +14,6 @@ You should have received a copy of the GNU General Public License along with Pix
 package naturallanguageprocessing
 
 import (
-	"fmt"
 	"math"
 	"regexp"
 	"strconv"
@@ -187,7 +186,7 @@ func (e *Enumerate) EnumerationSplit(input string) []Enumerate {
 			val: caller.val,
 		}
 	}
-	
+
 	return enum
 }
 
@@ -236,8 +235,6 @@ func (e *Enumerate) Enumeration(input string) []string {
 			return enum
 		}
 	}
-
-	fmt.Println(enum)
 
 	return nil
 }

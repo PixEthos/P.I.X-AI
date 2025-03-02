@@ -146,11 +146,13 @@ func (m *Matrix) Matrix32Subtraction(mat, mat1 Matrix32) Matrix32 {
 	}
 
 	output := make([][]float32, len(mat))
-	for i := range len(mat) {
-		for x := range mat[i] {
-			if len(mat1) > i && len(mat1[i]) > x {
+	for i := range mat {
+		for x := range mat[0] {
+			if len(mat) > len(mat1) {
 				output[i] = append(output[i], mat1[i][x]-mat[i][x])
-			} else if len(mat) > i && len(mat[i]) > x {
+			}
+
+			if len(mat1) > len(mat) {
 				output[i] = append(output[i], mat[i][x]-mat1[i][x])
 			}
 		}

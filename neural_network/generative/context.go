@@ -22,7 +22,7 @@ import (
 // gru layering
 func (g *Generative) GRU_pri(input matrix.Matrix32, x string) matrix.Matrix32 {
 
-	gru_sec := layer.GRU_activation(200, 30, input, "float", x)
+	gru_sec := layer.GRU_activation(200, 30, input, "float64", x)
 	if gru_sec != nil {
 		return gru_sec
 	}
@@ -59,7 +59,7 @@ func (g *Generative) GRU_primary(input matrix.Matrix32, value string) (float64, 
 	val := g.GRU_decode(GRU, value)
 
 	// primary
-	g.PrimaryContext(value)
+	gpe, stop := g.PrimaryContext(value)
 	gru_pri := g.Gru_processed(output, value)
 
 	// accuracy
@@ -67,7 +67,7 @@ func (g *Generative) GRU_primary(input matrix.Matrix32, value string) (float64, 
 
 	// logs
 	log.Println("GRU_1 accuracy:  ", primary)
-	log.Println("GRU_1 processed: ", gru_pri)
+	log.Println("GPE match: ", gpe, "\nStopword match: ", stop)
 	log.Println("GRU_1: ", val)
 	log.Println("ASCII: ", GRU)
 
@@ -86,7 +86,7 @@ func (g *Generative) Primary(input matrix.Matrix32, value string) {
 // gru layering
 func (g* Generative) GRU_second(input matrix.Matrix32, x string) matrix.Matrix32 {
 
-	gru_sec := layer.GRU_activation(100, 10, input, "float", x)
+	gru_sec := layer.GRU_activation(100, 10, input, "float64", x)
 	if gru_sec != nil {
 		return gru_sec
 	}
@@ -117,7 +117,7 @@ func (g *Generative) GRU_secondary(input matrix.Matrix32, value string) (float64
 	val1 := g.GRU_decode(GRU_2, value)
 
 	// secondary
-	g.SecondaryContext(value)
+	nouns := g.SecondaryContext(value)
 	gru_sec := g.Gru_processed_secondary(output, value)
 
 	// accuracy
@@ -125,7 +125,7 @@ func (g *Generative) GRU_secondary(input matrix.Matrix32, value string) (float64
 
 	// logs
 	log.Println("GRU_2 accuracy:  ", secondary)
-	log.Println("GRU_2 processed: ", gru_sec)
+	log.Println("Nouns match: ", nouns)
 	log.Println("GRU_2: ", val1)
 	log.Println("ASCII: ", GRU_2)
 
@@ -142,7 +142,7 @@ func (g *Generative) Secondary(input matrix.Matrix32, value string) {
 // gru layering
 func (g *Generative) GRU_tri(input matrix.Matrix32, x string) matrix.Matrix32 {
 
-	gru_sec := layer.GRU_activation(100, 10, input, "float", x)
+	gru_sec := layer.GRU_activation(100, 10, input, "float64", x)
 	if gru_sec != nil {
 		return gru_sec
 	}
@@ -175,7 +175,7 @@ func (g *Generative) GRU_trinary(input matrix.Matrix32, value string) (float64, 
 	output := mat32.RuneToMatrix32(GRU_3)
 
 	// trinary
-	g.TrinaryContext(value)
+	verbs := g.TrinaryContext(value)
 	gru_tri := g.Gru_processed_trinary(output, value)
 
 	// accuracy
@@ -183,7 +183,7 @@ func (g *Generative) GRU_trinary(input matrix.Matrix32, value string) (float64, 
 
 	// logs
 	log.Println("GRU_3 accuracy:  ", trinary)
-	log.Println("GRU_3 processed: ", gru_tri)
+	log.Println("Verb match: ", verbs)
 	log.Println("GRU_3: ", val2)
 	log.Println("ASCII: ", GRU_3)
 
