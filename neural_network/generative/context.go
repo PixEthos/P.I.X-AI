@@ -10,6 +10,8 @@ PixAI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANT
 
 You should have received a copy of the GNU General Public License along with PixAI. If not, see <https://www.gnu.org/licenses/>. */
 
+// test from VSCodium
+
 // context.go
 package generative
 
