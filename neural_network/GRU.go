@@ -299,7 +299,7 @@ func (l *Layers) GRU_sigmoid(input mat.Matrix32, val, x string) float64 {
 	}
 
 	// logerithm of the primary sets of each
-	primary := v.Log(sigmoid)
+	primary := sigmoid
 
 	return primary
 }

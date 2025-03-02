@@ -66,8 +66,8 @@ func (g *Generative) GRU_primary(input matrix.Matrix32, value string) (float64, 
 	primary := layer.GRU_sigmoid(gru_pri, "float64", value)
 
 	// logs
-	log.Println("GRU_1 accuracy:  ", primary)
-	log.Println("GPE match: ", gpe, "\nStopword match: ", stop)
+	log.Println("GRU_1 accuracy: ", primary)
+	log.Println("GPE match: ", gpe, "Stopword match: ", stop)
 	log.Println("GRU_1: ", val)
 	log.Println("ASCII: ", GRU)
 
@@ -124,7 +124,7 @@ func (g *Generative) GRU_secondary(input matrix.Matrix32, value string) (float64
 	secondary := layer.GRU_sigmoid(gru_sec, "float64", value)
 
 	// logs
-	log.Println("GRU_2 accuracy:  ", secondary)
+	log.Println("GRU_2 accuracy: ", secondary)
 	log.Println("Nouns match: ", nouns)
 	log.Println("GRU_2: ", val1)
 	log.Println("ASCII: ", GRU_2)
@@ -182,7 +182,7 @@ func (g *Generative) GRU_trinary(input matrix.Matrix32, value string) (float64, 
 	trinary := layer.GRU_sigmoid(gru_tri, "float64", value)
 
 	// logs
-	log.Println("GRU_3 accuracy:  ", trinary)
+	log.Println("GRU_3 accuracy: ", trinary)
 	log.Println("Verb match: ", verbs)
 	log.Println("GRU_3: ", val2)
 	log.Println("ASCII: ", GRU_3)
