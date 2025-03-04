@@ -189,8 +189,6 @@ func (c *Conversion) Filtration(filter int, element []string) float64 {
 		}
 	}
 
-	log.Println("Filtration: ", result)
-
 	if len(output) != 0 {
 		return result
 	}
