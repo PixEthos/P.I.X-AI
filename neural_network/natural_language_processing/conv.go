@@ -17,6 +17,7 @@ import (
 	"bufio"
 	"encoding/csv"
 	"os"
+	"slices"
 	"strings"
 )
 
@@ -150,14 +151,10 @@ func (c *Conversion) StringCheck(val []string, word string) bool {
 	for _, x := range val {
 		words[x] = []string{x}
 
-		_, similar := words[word]
+		similar, _ := words[word]
 
-		for similar {
-			for _, x := range val {
-				if x == word {
-					return true
-				}
-			}
+		if slices.Contains(similar, x) {
+			return true
 		}
 	}
 

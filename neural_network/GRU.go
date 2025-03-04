@@ -63,14 +63,14 @@ func (l *Layers) GRU_encapsulated(count uint32) mat.Matrix32 {
 	weight5 = rand.Float32() + 5
 
 	// internals being appended/added to the main matrix
-	for i := 0; i < int(count); i++ {
+	for i := range count {
 		internals := mat.Matrix32{
 			{bias, bias1}, {bias2, bias3}, {bias4, bias5},
 			{weight, weight1}, {weight2, weight3}, {weight4, weight5},
 		}
 		encap = append(encap, internals...)
 
-		if len(encap) > len(internals) {
+		if len(encap) > int(i) {
 			break
 		}
 	}
@@ -149,8 +149,12 @@ I'd rather not waste my time learning a new library.
 func (l *Layers) GRU_Layers() mat.Matrix32 {
 	if l.number_of_layers != 0 {
 		layers := make(mat.Matrix32, l.number_of_neurons)
-		for i := 0; i < int(l.number_of_layers); i++ {
+		for i := range l.number_of_layers {
 			layers = l.GRU_encapsulated(l.number_of_neurons)
+
+			if i > l.number_of_layers {
+				break
+			}
 		}
 
 		if layers != nil {
@@ -317,7 +321,6 @@ Example: l.GRU_activation(100, 10, input, "float")
 func (l *Layers) GRU_activation(neurons, layers uint32, input mat.Matrix32, value, x string) mat.Matrix32 {
 	l.GRU_layering(neurons, layers)
 	output := l.GRU_layer_output(input, value, x)
-
 
 	if output != nil {
 		return output

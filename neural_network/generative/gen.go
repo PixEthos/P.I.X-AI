@@ -85,6 +85,12 @@ func (p Prefix) Merge(input string) {
 	}
 }
 
+// chain
+func (Generative) Chain(order int) *Generative {
+	chain := Generative{order: order, frequency: make(map[string][]string)}
+	return &chain
+}
+
 // decoding
 func (g *Generative) GRU_decode(val matrix.Rune, input string) string {
 	decode := layer.GRU_rune_decode(input, val)
@@ -100,12 +106,6 @@ func (g *Generative) GRUActivation(variable matrix.Matrix32, input string) {
 	g.Primary(variable, input)
 	g.Secondary(variable, input)
 	g.Trinary(variable, input)
-}
-
-// chain
-func (Generative) Chain(order int) *Generative {
-	chain := Generative{order: order, frequency: make(map[string][]string)}
-	return &chain
 }
 
 // GRU
@@ -210,6 +210,7 @@ func (chain *Generative) Adding(n int, input string) []string {
 	return nil
 }
 
+// chaining
 func (chain *Generative) MarkovChains(input string) []string {
 	split := chain.Splitting(input)
 	enums := chain.Enum(split)
