@@ -16,6 +16,7 @@ package naturallanguageprocessing
 import (
 	"bufio"
 	"encoding/csv"
+	"log"
 	"os"
 	"slices"
 	"strings"
@@ -164,25 +165,31 @@ func (c *Conversion) StringCheck(val []string, word string) bool {
 // Probability filter
 func (c *Conversion) Filtration(filter int, element []string) float64 {
 	var result float64
-	output := make([]string, filter)
-	for _, f := range element {
-		element = append(element, f)
+	output := []string{}
 
-		output = make([]string, len(element))
-		for x := range output {
-			var el1, el2 float64
+	// element filtering
+	if len(element) != 0 && filter != 0 {
+		for _, x := range element {
 
-			output = append(output, element[x])
-			output = append(output, f)
+			// appending
+			output = append(output, x)
 
-			el1 = float64(len(element))
-			el2 = float64(len(output))
+			// matching
+			for i := range output {
+				if i != 0 {
+					filter = len(output) / len(output)
+				}
 
-			if len(output) != 0 {
-				result = el2 / el1
+				// checking
+				if filter != 0 {
+					result = float64(filter)
+					break
+				}
 			}
 		}
 	}
+
+	log.Println("Filtration: ", result)
 
 	if len(output) != 0 {
 		return result

@@ -31,7 +31,7 @@ func (g *Generative) GRU_pri(input matrix.Matrix32, x string) matrix.Matrix32 {
 }
 
 // context holder
-func (g *Generative) Gru_processed(input matrix.Matrix32, con string) (matrix.Matrix32) {
+func (g *Generative) Gru_processed(input matrix.Matrix32, con string) matrix.Matrix32 {
 	output := g.GRU_pri(input, con)
 
 	if output != nil {
@@ -83,8 +83,7 @@ func (g *Generative) Primary(input matrix.Matrix32, value string) {
 }
 
 // secondary
-// gru layering
-func (g* Generative) GRU_second(input matrix.Matrix32, x string) matrix.Matrix32 {
+func (g *Generative) GRU_second(input matrix.Matrix32, x string) matrix.Matrix32 {
 
 	gru_sec := layer.GRU_activation(100, 10, input, "float64", x)
 	if gru_sec != nil {
@@ -94,7 +93,7 @@ func (g* Generative) GRU_second(input matrix.Matrix32, x string) matrix.Matrix32
 	return nil
 }
 
-func (g* Generative) Gru_processed_secondary(input matrix.Matrix32, con string) (matrix.Matrix32) {
+func (g *Generative) Gru_processed_secondary(input matrix.Matrix32, con string) matrix.Matrix32 {
 	output := g.GRU_second(input, con)
 
 	if output != nil {
@@ -139,7 +138,7 @@ func (g *Generative) Secondary(input matrix.Matrix32, value string) {
 	x.Merge(value)
 }
 
-// gru layering
+// trinary
 func (g *Generative) GRU_tri(input matrix.Matrix32, x string) matrix.Matrix32 {
 
 	gru_sec := layer.GRU_activation(100, 10, input, "float64", x)
@@ -151,7 +150,7 @@ func (g *Generative) GRU_tri(input matrix.Matrix32, x string) matrix.Matrix32 {
 }
 
 // context holder
-func (g *Generative) Gru_processed_trinary(input matrix.Matrix32, con string) (matrix.Matrix32) {
+func (g *Generative) Gru_processed_trinary(input matrix.Matrix32, con string) matrix.Matrix32 {
 	output := g.GRU_tri(input, con)
 
 	if output != nil {
@@ -161,7 +160,6 @@ func (g *Generative) Gru_processed_trinary(input matrix.Matrix32, con string) (m
 	return nil
 }
 
-// trinary
 func (g *Generative) TrinaryContext(input string) float64 {
 	verbs := context.VERBActivator(input)
 
