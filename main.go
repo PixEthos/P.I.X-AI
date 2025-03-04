@@ -49,3 +49,8 @@ func main() {
 	defer user.Close()
 	user.ApplicationUI()
 }
+
+/* 
+"An idiot admires complexity. A genius admires simplicity. 
+A physicist tries to make it simple." - Terry A. Davis 
+*/
