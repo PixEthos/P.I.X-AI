@@ -13,6 +13,10 @@ You should have received a copy of the GNU General Public License along with Pix
 // predictive.go
 package naturallanguageprocessing
 
+import (
+	"log"
+)
+
 /* Simplicity should be an absolute priority when making anything.
 
 I find myself reading and reading, and the more I do; the more frustrated
@@ -80,6 +84,7 @@ func (p *Predictive) PredictGPE(input string, val chan float64) {
 	doc = append(doc, words...)
 
 	filter := c.Filtration(v, doc)
+	log.Println("GPE Filtration: ", filter)
 
 	output := p.Probability(filter, float64(v))
 
@@ -160,6 +165,7 @@ func (p *Predictive) PredictStopwords(input string, val chan float64) {
 	doc = append(doc, words...)
 
 	filter := c.Filtration(v, doc)
+	log.Println("Stopwords Filtration: ", filter)
 
 	output := p.Probability(filter, float64(v))
 
@@ -236,6 +242,7 @@ func (p *Predictive) PredictNouns(input string, val chan float64) {
 	doc = append(doc, words...)
 
 	filter := c.Filtration(v, doc)
+	log.Println("Nouns Filtration: ", filter)
 
 	output := p.Probability(filter, float64(v))
 
@@ -311,6 +318,7 @@ func (p *Predictive) PredictVerbs(input string, val chan float64) {
 	doc = append(doc, words...)
 
 	filter := c.Filtration(v, doc)
+	log.Println("Verbs Filtration: ", filter)
 
 	output := p.Probability(filter, float64(v))
 

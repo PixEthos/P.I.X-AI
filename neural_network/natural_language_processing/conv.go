@@ -16,7 +16,6 @@ package naturallanguageprocessing
 import (
 	"bufio"
 	"encoding/csv"
-	"log"
 	"os"
 	"slices"
 	"strings"
