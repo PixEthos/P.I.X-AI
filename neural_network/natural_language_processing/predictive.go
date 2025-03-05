@@ -80,7 +80,6 @@ func (p *Predictive) PredictGPE(input string, val chan float64) {
 		//fmt.Println("GPE:", found)
 	}
 
-	// test
 	// appending the document fielding
 	doc = append(doc, words...)
 
