@@ -32,6 +32,9 @@ package matrix
 import (
 	"bytes"
 	"log"
+	"slices"
+
+	nlp "pixai/neural_network/natural_language_processing"
 )
 
 type Matrix32 [][]float32
@@ -269,8 +272,7 @@ func (m *Matrix) RuneToMatrix32(mat Rune) Matrix32 {
 		for x := range mat {
 			mat32[x] = append(mat32[x], float32(len(mat)))
 			if len(mat32) != 0 {
-				mat32 = append(mat32, mat32[i])
-				mat32 = append(mat32, mat32_1...)
+				mat32 = append(mat32, mat32_1[i])
 			}
 
 			if len(mat32) == 0 {
@@ -281,6 +283,30 @@ func (m *Matrix) RuneToMatrix32(mat Rune) Matrix32 {
 
 	if len(mat32) != 0 {
 		return mat32
+	}
+
+	return nil
+}
+
+// matrix32 to rune
+func (m *Matrix) RuneConvert(mat Matrix32) Rune {
+
+	// matrix32 to rune
+	mat1 := make(Rune, len(mat))
+	for i := range mat {
+		for _, x := range mat[i] {
+			if len(mat1) == 0 {
+				break
+			}
+
+			if len(mat1) != 0 {
+				mat1[i] = append(mat1[i], rune(x))
+			}
+		}
+	}
+
+	if len(mat1) != 0 {
+		return mat1
 	}
 
 	return nil
@@ -304,6 +330,90 @@ func (m *Matrix) Decoding(mat Rune, input string) string {
 			if len(output) == 0 {
 				log.Println("Decoding failure", i)
 				break
+			}
+		}
+	}
+
+	if len(output) != 0 {
+		return output
+	}
+
+	return ""
+}
+
+// decoding the output
+func (m *Matrix) DecodingContext(mat Rune, input string) string {
+	var output string
+	conv := nlp.Words{}
+	srt := nlp.Conversion{}
+
+	// array to string
+	gpe := srt.ArraytoString(conv.GPE)
+	stop := srt.ArraytoString(conv.Stopwords)
+	verb := srt.ArraytoString(conv.Verbs)
+	noun := srt.ArraytoString(conv.Nouns)
+
+	// cases
+	switch {
+
+	// GPE
+	case input == gpe:
+
+		// matching
+		if slices.Contains(conv.GPE, input) {
+
+			// rewriting
+			for _, x := range conv.GPE {
+				input = x
+				break
+			}
+		}
+
+	// Stopwords
+	case input == stop:
+		if slices.Contains(conv.Stopwords, input) {
+			for _, x := range conv.Stopwords {
+				input = x
+				break
+			}
+		}
+
+	// Nouns
+	case input == noun:
+		if slices.Contains(conv.Nouns, input) {
+			for _, x := range conv.Nouns {
+				input = x
+				break
+			}
+		}
+
+	// Verbs
+	case input == verb:
+		if slices.Contains(conv.Verbs, input) {
+			for _, x := range conv.Verbs {
+				input = x
+				break
+			}
+		}
+	}
+
+	// input val
+	input_val := []byte(input)
+
+	// itteration
+	for i := range input_val {
+
+		// grabbing byte value
+		for _, x := range input_val {
+			for l := range mat[i] {
+				// concatinate
+				output += string(rune(x))
+
+				// empty check
+				if len(output) == 0 {
+					log.Println("Decoding failure", l)
+					break
+				}
 			}
 		}
 	}

@@ -59,11 +59,16 @@ func (g *Generative) GRU_primary(input matrix.Matrix32, value string) (float64, 
 	val := g.GRU_decode(GRU, value)
 
 	// primary
-	gpe, stop := g.PrimaryContext(value)
-	gru_pri := g.Gru_processed(output, value)
+	gpe, stop := g.PrimaryContext(val)
+	gru_pri := g.Gru_processed(output, val)
+
+	// processing runes
+	gru_rune := mat32.RuneConvert(gru_pri)
+	gru := mat32.RuneToMatrix32(gru_rune)
+	x := mat32.DecodingContext(gru_rune, val)
 
 	// accuracy
-	primary := layer.GRU_sigmoid(gru_pri, "float64", value)
+	primary := layer.GRU_sigmoid(gru, "float64", value)
 
 	// logs
 	log.Println("GRU_1 accuracy: ", primary)
@@ -71,7 +76,7 @@ func (g *Generative) GRU_primary(input matrix.Matrix32, value string) (float64, 
 	log.Println("GRU_1: ", val)
 	log.Println("ASCII: ", GRU)
 
-	return primary, val
+	return primary, x
 }
 
 // primary caller
@@ -119,8 +124,13 @@ func (g *Generative) GRU_secondary(input matrix.Matrix32, value string) (float64
 	nouns := g.SecondaryContext(value)
 	gru_sec := g.Gru_processed_secondary(output, value)
 
+	// processing runes
+	gru_rune := mat32.RuneConvert(gru_sec)
+	gru := mat32.RuneToMatrix32(gru_rune)
+	x := mat32.DecodingContext(gru_rune, val1)
+
 	// accuracy
-	secondary := layer.GRU_sigmoid(gru_sec, "float64", value)
+	secondary := layer.GRU_sigmoid(gru, "float64", value)
 
 	// logs
 	log.Println("GRU_2 accuracy: ", secondary)
@@ -128,7 +138,7 @@ func (g *Generative) GRU_secondary(input matrix.Matrix32, value string) (float64
 	log.Println("GRU_2: ", val1)
 	log.Println("ASCII: ", GRU_2)
 
-	return secondary, val1
+	return secondary, x
 }
 
 func (g *Generative) Secondary(input matrix.Matrix32, value string) {
@@ -176,8 +186,13 @@ func (g *Generative) GRU_trinary(input matrix.Matrix32, value string) (float64, 
 	verbs := g.TrinaryContext(value)
 	gru_tri := g.Gru_processed_trinary(output, value)
 
+	// processing runes
+	gru_rune := mat32.RuneConvert(gru_tri)
+	gru := mat32.RuneToMatrix32(gru_rune)
+	x := mat32.DecodingContext(gru_rune, val2)
+
 	// accuracy
-	trinary := layer.GRU_sigmoid(gru_tri, "float64", value)
+	trinary := layer.GRU_sigmoid(gru, "float64", value)
 
 	// logs
 	log.Println("GRU_3 accuracy: ", trinary)
@@ -185,7 +200,7 @@ func (g *Generative) GRU_trinary(input matrix.Matrix32, value string) (float64, 
 	log.Println("GRU_3: ", val2)
 	log.Println("ASCII: ", GRU_3)
 
-	return trinary, val2
+	return trinary, x
 }
 
 func (g *Generative) Trinary(input matrix.Matrix32, value string) {

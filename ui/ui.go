@@ -115,7 +115,7 @@ func (ui *UserInterface) ApplicationWindow() {
 
 	// Fyne callers
 	runner := app.New()
-	window := runner.NewWindow("PixAI: Prealpha (0.30)") // title
+	window := runner.NewWindow("PixAI: Prealpha (0.36)") // title
 
 	// resize
 	window.Resize(fyne.NewSize(width, height))
@@ -124,6 +124,10 @@ func (ui *UserInterface) ApplicationWindow() {
 
 	// functions
 	ui.ApplicationInput()
+
+	limit := widget.NewLabel("The Input is limited to 255 (characters)")
+	description := widget.NewLabel("This is a passion project, still in early alpha. Just a basic match/predict as of now")
+	github := widget.NewLabel("Check here, for updates: https://github.com/PixEthos/PixAI")
 
 	// input labels
 	true_input := widget.NewLabel("Input: ")
@@ -143,6 +147,9 @@ func (ui *UserInterface) ApplicationWindow() {
 
 	// container
 	content := container.NewVBox(
+		description,
+		github,
+		limit,
 		input,
 		true_input, draw_input,
 		true_output, draw_output,
