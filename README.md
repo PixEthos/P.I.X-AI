@@ -18,24 +18,16 @@ At the moment, it's not doing too badly. This is 4 months of work later, conside
 This algorithm is around 3k lines by now, but I keep iterating.
 
 - "Why is it taking so long?"
-```
 I am using the standard library in Go, while Fyne is the UI.
-```
 
 - "What is the purpose of the project?"
-```
 This project is more or less a passion project; to see if I can do it, and to unravel a lot of the intricate details of the way algorithms work.
-```
 
 - "Why choose Go?"
-```
 I previously used C, and before that, Python. But Python relied too heavily on thirdparty libraries, and the syntax of Python is...I'll just be honest, dreadful. I might write pieces in C, but if that _is_ going to be the case, it's to ensure that the algorithm can run a bit more smoothly where it needs to. Go has the benefit of garbage collection; so it's genuinely for that benefit. That and it's technically more modern, meaning that Go has the benefit of more modern technologies (ie: Generics, and a lack of semi-colons for marking).
-```
 
 - "Why not use (x) library?"
-```
 Even if it speeds up development; I prefer to understand my algorithm and applications; the core of each application I have written (most are not published, but still) is usually in the standard library of the language I use. This is intentional; because ease != simplicity.
-```
 
 That should clear up the questions.
 
