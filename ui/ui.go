@@ -115,7 +115,7 @@ func (ui *UserInterface) ApplicationWindow() {
 
 	// Fyne callers
 	runner := app.New()
-	window := runner.NewWindow("PixAI: Prealpha (0.36)") // title
+	window := runner.NewWindow("PixAI: Prealpha (0.37)") // title
 
 	// resize
 	window.Resize(fyne.NewSize(width, height))

@@ -42,6 +42,25 @@ type Rune [][]rune
 
 type Matrix struct{}
 
+// comparison, input and array
+/*
+Takes an input string, and an array string; and makes a comparison
+between the inputs.
+*/
+func Comparison(input string, arr []string) string {
+	srt := nlp.Conversion{}
+
+	if slices.Contains(arr, input) {
+		output := srt.ArraytoString(arr)
+
+		if len(output) != 0 {
+			return output
+		}
+	}
+
+	return ""
+}
+
 // creating 32bit 2D arrays
 func (m *Matrix) Matrix32bit(mat Matrix32) Matrix32 {
 
@@ -345,77 +364,119 @@ func (m *Matrix) Decoding(mat Rune, input string) string {
 func (m *Matrix) DecodingContext(mat Rune, input string) string {
 	var output string
 	conv := nlp.Words{}
-	srt := nlp.Conversion{}
 
 	// array to string
-	gpe := srt.ArraytoString(conv.GPE)
-	stop := srt.ArraytoString(conv.Stopwords)
-	verb := srt.ArraytoString(conv.Verbs)
-	noun := srt.ArraytoString(conv.Nouns)
+	gpe := Comparison(input, conv.GPE)
+	stop := Comparison(input, conv.Stopwords)
+	verb := Comparison(input, conv.Verbs)
+	noun := Comparison(input, conv.Nouns)
 
-	// cases
+	// loop for matching
 	switch {
 
 	// GPE
-	case input == gpe:
+	case len(gpe) > 0:
+		input = gpe
 
-		// matching
-		if slices.Contains(conv.GPE, input) {
+		// input val
+		input_val := []byte(input)
 
-			// rewriting
-			for _, x := range conv.GPE {
-				input = x
-				break
+		// itteration
+		for i := range input_val {
+			for _, x := range input_val {
+				for l := range mat[i] {
+					output += string(rune(x))
+
+					// empty check
+					if len(output) == 0 {
+						log.Println("Decoding failure", l)
+						break
+					}
+				}
 			}
+
+			log.Println("GPE len: ", len(gpe))
+
+			break
 		}
 
-	// Stopwords
-	case input == stop:
-		if slices.Contains(conv.Stopwords, input) {
-			for _, x := range conv.Stopwords {
-				input = x
-				break
+	// stopwords
+	case len(stop) > 0:
+		input = stop
+
+		// input val
+		input_val := []byte(input)
+
+		// itteration
+		for i := range input_val {
+			for _, x := range input_val {
+				for l := range mat[i] {
+					output += string(rune(x))
+
+					// empty check
+					if len(output) == 0 {
+						log.Println("Decoding failure", l)
+						break
+					}
+				}
 			}
+
+			log.Println("Stopword len: ", len(stop))
+
+			break
 		}
 
-	// Nouns
-	case input == noun:
-		if slices.Contains(conv.Nouns, input) {
-			for _, x := range conv.Nouns {
-				input = x
-				break
+	// verbs
+	case len(verb) > 0:
+		input = verb
+
+		// input val
+		input_val := []byte(input)
+
+		// itteration
+		for i := range input_val {
+			for _, x := range input_val {
+				for l := range mat[i] {
+					output += string(rune(x))
+
+					// empty check
+					if len(output) == 0 {
+						log.Println("Decoding failure", l)
+						break
+					}
+				}
 			}
+
+			log.Println("Verb len: ", len(verb))
+
+			break
 		}
 
-	// Verbs
-	case input == verb:
-		if slices.Contains(conv.Verbs, input) {
-			for _, x := range conv.Verbs {
-				input = x
-				break
-			}
-		}
-	}
+	// nouns
+	case len(noun) > 0:
+		input = noun
 
-	// input val
-	input_val := []byte(input)
+		// input val
+		input_val := []byte(input)
 
-	// itteration
-	for i := range input_val {
+		// itteration
+		for i := range input_val {
+			for _, x := range input_val {
+				for l := range mat[i] {
+					output += string(rune(x))
 
-		// grabbing byte value
-		for _, x := range input_val {
-			for l := range mat[i] {
-				// concatinate
-				output += string(rune(x))
-
-				// empty check
-				if len(output) == 0 {
-					log.Println("Decoding failure", l)
-					break
+					// empty check
+					if len(output) == 0 {
+						log.Println("Decoding failure", l)
+						break
+					}
 				}
 			}
 		}
+
+		log.Println("Noun len: ", len(noun))
+
+		break
 	}
 
 	if len(output) != 0 {
