@@ -50,12 +50,19 @@ between the inputs.
 func Comparison(input string, arr []string) string {
 	srt := nlp.Conversion{}
 
-	if slices.Contains(arr, input) {
-		output := srt.ArraytoString(arr)
+	var output string
 
-		if len(output) != 0 {
-			return output
+	for slices.Contains(arr, input) {
+		output = srt.ArraytoString(arr)
+
+		if len(output) == 0 {
+			log.Println("Failed to convert", output)
 		}
+	}
+
+	if len(output) != 0 {
+		log.Println("Converted: ", output)
+		return output
 	}
 
 	return ""
@@ -370,6 +377,8 @@ func (m *Matrix) DecodingContext(mat Rune, input string) string {
 	stop := Comparison(input, conv.Stopwords)
 	verb := Comparison(input, conv.Verbs)
 	noun := Comparison(input, conv.Nouns)
+
+	log.Println(gpe, stop, verb, noun)
 
 	// loop for matching
 	switch {

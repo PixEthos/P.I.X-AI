@@ -73,7 +73,7 @@ func (g *Generative) GRU_primary(input matrix.Matrix32, value string) (float64, 
 	// logs
 	log.Println("GRU_1 accuracy: ", primary)
 	log.Println("GPE match: ", gpe, "Stopword match: ", stop)
-	log.Println("GRU_1: ", val)
+	log.Println("GRU_1: ", val, x)
 	log.Println("ASCII: ", GRU)
 
 	return primary, x
