@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 
 	// fyne
 	"fyne.io/fyne/v2"
@@ -93,10 +94,24 @@ func ApplicationInit(input string) string {
 	return ""
 }
 
+// input length
+func InputLenght(input string) int {
+	var i int
+	for i = range len(input) {
+		i = len(input)
+	}
+
+	if i != 0 {
+		return i
+	}
+
+	return 0
+}
+
 // input
 func (ui *UserInterface) ApplicationInput() string {
 	input.SetPlaceHolder("Input the data/input here")
-	if len(input.Text) != 0 || len(input.Text) != 255 {
+	if len(input.Text) != 0 || len(input.Text) != 127 {
 		return input.Text
 	}
 
@@ -115,7 +130,7 @@ func (ui *UserInterface) ApplicationWindow() {
 
 	// Fyne callers
 	runner := app.New()
-	window := runner.NewWindow("PixAI: Prealpha (0.37)") // title
+	window := runner.NewWindow("PixAI: Prealpha (0.38)") // title
 
 	// resize
 	window.Resize(fyne.NewSize(width, height))
@@ -125,17 +140,13 @@ func (ui *UserInterface) ApplicationWindow() {
 	// functions
 	ui.ApplicationInput()
 
-	limit := widget.NewLabel("The Input is limited to 255 (characters)")
+	limit := widget.NewLabel("The Input is limited to 128 (characters)")
 	description := widget.NewLabel("This is a passion project, still in early alpha. Just a basic match/predict as of now")
 	github := widget.NewLabel("Check here, for updates: https://github.com/PixEthos/PixAI")
 
 	// input labels
-	true_input := widget.NewLabel("Input: ")
+	input_length := widget.NewLabel("")
 	draw_input := widget.NewLabel("")
-
-	// input style
-	draw_input.TextStyle.Bold = true
-	draw_input.TextStyle.Symbol = true
 
 	// output labels
 	true_output := widget.NewLabel("Output: ")
@@ -145,22 +156,32 @@ func (ui *UserInterface) ApplicationWindow() {
 	draw_output.TextStyle.Bold = true
 	draw_output.TextStyle.Symbol = true
 
+	// scrolling area
+	horizontal := container.NewScroll(draw_output)
+	holding := container.NewStack(horizontal)
+	grid := container.NewGridWithRows(2, holding)
+
 	// container
 	content := container.NewVBox(
 		description,
 		github,
 		limit,
+		input_length,
 		input,
-		true_input, draw_input,
-		true_output, draw_output,
 		widget.NewButton("send", func() {
+			// length
+			x := InputLenght(input.Text)
+			input_length.SetText(strconv.Itoa(x))
+
+			// input
 			draw_input.SetText(input.Text)
 
+			// output
 			output := ApplicationInit(input.Text)
 			draw_output.SetText(output)
-
-			log.Println(output)
 		}),
+		true_output,
+		grid,
 	)
 
 	window.SetContent(content)

@@ -88,16 +88,20 @@ func (nlp *NLP) Scanner(val string) string {
 	fmt.Printf("input tokens: %d\n", len(sp))
 	fmt.Println("matched: ", match)
 
-	if len(in) < 256 {
+	if len(in) < 128 {
 		value.Input = in
+		log.Println("Input length: ", len(in))
 
 		// byte encoding
 		bit := make([]byte, 256)
 		encode.Encode(in, bit)
-	}
 
-	if len(in) != 0 {
-		return in
+		if len(in) != 0 {
+			return in
+		}
+	} else {
+		log.Println("Data length is more than 256")
+		return ""
 	}
 
 	return ""

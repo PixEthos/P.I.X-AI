@@ -1,7 +1,7 @@
 ### TEST BRANTCH! ###
 
 IF YOU INSTALL THIS:
-- There is a limit for the input values to be 255 in length, it's a hard limit at the moment.
+- There is a limit for the input values to be 255 in length (128 char), it's a hard limit at the moment.
 - Working on the Markov chains, but it still is fun to see what it is capable of doing.
 - Matrix handling is still a work in progress.
 - Inputs _ARE_ encrypted, eventually I plan on making sure that logged data is only the outputs, and not the input values. Course, this is the dev branch, so it's ideal to get an idea.
