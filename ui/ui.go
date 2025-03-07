@@ -115,8 +115,8 @@ func (ui *UserInterface) ApplicationInput() string {
 		return input.Text
 	}
 
-	if len(input.Text) > 256 {
-		log.Println("255 is the limit of characters")
+	if len(input.Text) > 128 {
+		log.Println("127 is the limit of characters")
 	}
 
 	return ""
