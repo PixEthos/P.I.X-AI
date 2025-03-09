@@ -42,9 +42,10 @@ for effective matching, and predictive values.*/
 func (p *Predictive) GPE_predictive(input string) ([][]string, []string, []string) {
 	// calling variables, and structs
 	nlp := NLP{}
+	w := Words{}
 	c := Conversion{}
 	doc := nlp.SplitTokens(input)       // Document
-	words := p.Words().GPE              // words
+	words := w.Words().GPE              // words
 	open := "../PixAI/words_en/GPE.csv" // file location
 	word := c.ConvertToString(open)     // converting to string
 
@@ -125,9 +126,10 @@ func (p *Predictive) GPEActivator(input string) float64 {
 func (p *Predictive) STOPWORDS_predictive(input string) ([][]string, []string, []string) {
 	// calling variables, and structs
 	nlp := NLP{}
+	w := Words{}
 	c := Conversion{}
 	doc := nlp.SplitTokens(input) // Document
-	words := p.Words().Stopwords
+	words := w.Words().Stopwords
 	open := "../PixAI/words_en/stopwords.csv"
 	word := c.ConvertToString(open) // converting to string
 
@@ -203,8 +205,9 @@ func (p *Predictive) NOUNS_predictive(input string) ([][]string, []string, []str
 	// calling variables, and structs
 	nlp := NLP{}
 	c := Conversion{}
+	w := Words{}
 	doc := nlp.SplitTokens(input) // Document
-	words := p.Words().Nouns
+	words := w.Words().Nouns
 	open := "../PixAI/words_en/nouns.csv"
 	word := c.ConvertToString(open) // converting to string
 
@@ -278,9 +281,10 @@ func (p *Predictive) NOUNActivator(input string) float64 {
 func (p *Predictive) VERBS_predictive(input string) ([][]string, []string, []string) {
 	// calling variables, and structs
 	nlp := NLP{}
+	w := Words{}
 	c := Conversion{}
 	doc := nlp.SplitTokens(input) // Document
-	words := p.Words().Verbs
+	words := w.Words().Verbs
 	open := "../PixAI/words_en/verbs.csv"
 	word := c.ConvertToString(open) // converting to string
 

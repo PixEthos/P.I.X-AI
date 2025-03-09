@@ -82,7 +82,9 @@ func (p *Predictive) Verbs() []string {
 }
 
 // Words struct caller
-func (p *Predictive) Words() *Words {
+func (w *Words) Words() *Words {
+	p := Predictive{}
+
 	stop := p.Stopwords()
 	gpe := p.GPE()
 	nouns := p.Nouns()

@@ -161,6 +161,23 @@ func (c *Conversion) StringCheck(val []string, word string) bool {
 	return false
 }
 
+// matching the internal strings within the array, returning a string
+func (c *Conversion) ArrCheck(val []string, word string) string {
+	words := make(map[string][]string, len(val))
+	for _, x := range val {
+		words[x] = []string{x}
+
+		similar, _ := words[word]
+
+		if slices.Contains(similar, x) {
+			val := c.ArraytoString(similar)
+			return val
+		}
+	}
+
+	return ""
+}
+
 // Probability filter
 func (c *Conversion) Filtration(filter int, element []string) float64 {
 	var result float64

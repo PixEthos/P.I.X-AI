@@ -32,7 +32,6 @@ package matrix
 import (
 	"bytes"
 	"log"
-	"slices"
 
 	nlp "pixai/neural_network/natural_language_processing"
 )
@@ -50,18 +49,15 @@ between the inputs.
 func Comparison(input string, arr []string) string {
 	srt := nlp.Conversion{}
 
-	var output string
+	output := srt.ArrCheck(arr, input)
+	log.Println(len(output))
 
-	for slices.Contains(arr, input) {
-		output = srt.ArraytoString(arr)
-
-		if len(output) == 0 {
-			log.Println("Failed to convert", output)
-		}
+	if len(output) == 0 {
+		log.Println("Failed to convert", len(output))
 	}
 
 	if len(output) != 0 {
-		log.Println("Converted: ", output)
+		log.Println("Converted: ", len(output))
 		return output
 	}
 
@@ -371,20 +367,12 @@ func (m *Matrix) Decoding(mat Rune, input string) string {
 func (m *Matrix) DecodingContext(mat Rune, input string) string {
 	var output string
 	conv := nlp.Words{}
-
-	// array to string
-	gpe := Comparison(input, conv.GPE)
-	stop := Comparison(input, conv.Stopwords)
-	verb := Comparison(input, conv.Verbs)
-	noun := Comparison(input, conv.Nouns)
-
-	log.Println(gpe, stop, verb, noun)
-
-	// loop for matching
-	switch {
+	srt := nlp.Conversion{}
 
 	// GPE
-	case len(gpe) > 0:
+	if srt.StringCheck(conv.Words().GPE, input) {
+		gpe := Comparison(input, conv.Words().GPE)
+
 		input = gpe
 
 		// input val
@@ -404,13 +392,16 @@ func (m *Matrix) DecodingContext(mat Rune, input string) string {
 				}
 			}
 
-			log.Println("GPE len: ", len(gpe))
-
 			break
 		}
 
+		log.Println("GPE len: ", len(gpe))
+	}
+
 	// stopwords
-	case len(stop) > 0:
+	if srt.StringCheck(conv.Words().Stopwords, input) {
+		stop := Comparison(input, conv.Words().Stopwords)
+
 		input = stop
 
 		// input val
@@ -430,13 +421,16 @@ func (m *Matrix) DecodingContext(mat Rune, input string) string {
 				}
 			}
 
-			log.Println("Stopword len: ", len(stop))
-
 			break
 		}
 
+		log.Println("Stopword len: ", len(stop))
+	}
+
 	// verbs
-	case len(verb) > 0:
+	if srt.StringCheck(conv.Words().Verbs, input) {
+		verb := Comparison(input, conv.Words().Verbs)
+
 		input = verb
 
 		// input val
@@ -456,13 +450,16 @@ func (m *Matrix) DecodingContext(mat Rune, input string) string {
 				}
 			}
 
-			log.Println("Verb len: ", len(verb))
-
 			break
 		}
 
+		log.Println("Verb len: ", len(verb))
+	}
+
 	// nouns
-	case len(noun) > 0:
+	if srt.StringCheck(conv.Words().Nouns, input) {
+		noun := Comparison(input, conv.Words().Nouns)
+
 		input = noun
 
 		// input val
@@ -481,11 +478,12 @@ func (m *Matrix) DecodingContext(mat Rune, input string) string {
 					}
 				}
 			}
+
+			break
 		}
 
 		log.Println("Noun len: ", len(noun))
 
-		break
 	}
 
 	if len(output) != 0 {
