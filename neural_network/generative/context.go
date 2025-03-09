@@ -73,7 +73,7 @@ func (g *Generative) GRU_primary(input matrix.Matrix32, value string) (float64, 
 	// logs
 	log.Println("GRU_1 accuracy: ", primary)
 	log.Println("GPE match: ", gpe, "Stopword match: ", stop)
-	log.Println("GRU_1: ", val, x)
+	log.Println("GRU_1: ", len(val), x)
 	log.Println("ASCII: ", GRU)
 
 	return primary, x
@@ -135,7 +135,7 @@ func (g *Generative) GRU_secondary(input matrix.Matrix32, value string) (float64
 	// logs
 	log.Println("GRU_2 accuracy: ", secondary)
 	log.Println("Nouns match: ", nouns)
-	log.Println("GRU_2: ", val1)
+	log.Println("GRU_2: ", len(val1))
 	log.Println("ASCII: ", GRU_2)
 
 	return secondary, x
@@ -197,7 +197,7 @@ func (g *Generative) GRU_trinary(input matrix.Matrix32, value string) (float64, 
 	// logs
 	log.Println("GRU_3 accuracy: ", trinary)
 	log.Println("Verb match: ", verbs)
-	log.Println("GRU_3: ", val2)
+	log.Println("GRU_3: ", len(val2))
 	log.Println("ASCII: ", GRU_3)
 
 	return trinary, x
