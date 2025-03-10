@@ -53,7 +53,4 @@ func main() {
 /*
 "An idiot admires complexity. A genius admires simplicity.
 A physicist tries to make it simple." - Terry A. Davis
-
-I actually had no idea signing off commits would expose my personal address.
-Don't get any hairbrained ideas.
 */
