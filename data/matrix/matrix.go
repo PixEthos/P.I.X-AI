@@ -41,28 +41,6 @@ type Rune [][]rune
 
 type Matrix struct{}
 
-// comparison, input and array
-/*
-Takes an input string, and an array string; and makes a comparison
-between the inputs.
-*/
-func Comparison(input string, arr []string) string {
-	srt := nlp.Conversion{}
-
-	output := srt.ArrCheck(arr, input)
-
-	if len(output) == 0 {
-		log.Println("Failed to convert", len(output))
-	}
-
-	if len(output) != 0 {
-		log.Println("Converted: ", len(output))
-		return output
-	}
-
-	return ""
-}
-
 // creating 32bit 2D arrays
 func (m *Matrix) Matrix32bit(mat Matrix32) Matrix32 {
 
@@ -371,7 +349,7 @@ func (m *Matrix) DecodingContext(mat Rune, input string) string {
 
 	// GPE
 	if srt.StringCheck(conv.Words().GPE, input) {
-		gpe := Comparison(input, conv.Words().GPE)
+		gpe := srt.ArrCheck(conv.Words().GPE, input)
 
 		input = gpe
 
@@ -400,7 +378,7 @@ func (m *Matrix) DecodingContext(mat Rune, input string) string {
 
 	// stopwords
 	if srt.StringCheck(conv.Words().Stopwords, input) {
-		stop := Comparison(input, conv.Words().Stopwords)
+		stop := srt.ArrCheck(conv.Words().Stopwords, input)
 
 		input = stop
 
@@ -429,7 +407,7 @@ func (m *Matrix) DecodingContext(mat Rune, input string) string {
 
 	// verbs
 	if srt.StringCheck(conv.Words().Verbs, input) {
-		verb := Comparison(input, conv.Words().Verbs)
+		verb := srt.ArrCheck(conv.Words().Verbs, input)
 
 		input = verb
 
@@ -458,7 +436,7 @@ func (m *Matrix) DecodingContext(mat Rune, input string) string {
 
 	// nouns
 	if srt.StringCheck(conv.Words().Nouns, input) {
-		noun := Comparison(input, conv.Words().Nouns)
+		noun := srt.ArrCheck(conv.Words().Nouns, input)
 
 		input = noun
 
