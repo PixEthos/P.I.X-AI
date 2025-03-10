@@ -170,8 +170,8 @@ func (c *Conversion) ArrCheck(val []string, word string) string {
 		similar, _ := words[word]
 
 		if slices.Contains(similar, x) {
-			val := c.ArraytoString(similar)
-			return val
+			l := c.ArraytoString(similar)
+			return l
 		}
 	}
 

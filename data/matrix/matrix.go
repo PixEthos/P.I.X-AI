@@ -50,7 +50,6 @@ func Comparison(input string, arr []string) string {
 	srt := nlp.Conversion{}
 
 	output := srt.ArrCheck(arr, input)
-	log.Println(len(output))
 
 	if len(output) == 0 {
 		log.Println("Failed to convert", len(output))
@@ -365,9 +364,10 @@ func (m *Matrix) Decoding(mat Rune, input string) string {
 
 // decoding the output
 func (m *Matrix) DecodingContext(mat Rune, input string) string {
-	var output string
 	conv := nlp.Words{}
 	srt := nlp.Conversion{}
+
+	var output string
 
 	// GPE
 	if srt.StringCheck(conv.Words().GPE, input) {
