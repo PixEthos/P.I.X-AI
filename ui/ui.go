@@ -187,7 +187,6 @@ func (ui *UserInterface) ApplicationWindow() {
 		grid,
 	)
 
-	// content
 	window.SetContent(content)
 
 	// runner
