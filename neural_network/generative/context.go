@@ -51,11 +51,11 @@ func (g *Generative) PrimaryContext(input string) (float64, float64) {
 
 // primary activator
 func (g *Generative) GRU_primary(input matrix.Matrix32, value string) (float64, string) {
-	mat32 := matrix.Matrix{}
+	mat := matrix.RuneMatrix{}
 
 	// rune
 	GRU := layer.GRU_rune_variable(value, input)
-	output := mat32.RuneToMatrix32(GRU)
+	output := mat.RuneToMatrix32(GRU)
 	val := g.GRU_decode(GRU, value)
 
 	// primary
@@ -63,9 +63,9 @@ func (g *Generative) GRU_primary(input matrix.Matrix32, value string) (float64, 
 	gru_pri := g.Gru_processed(output, val)
 
 	// processing runes
-	gru_rune := mat32.RuneConvert(gru_pri)
-	gru := mat32.RuneToMatrix32(gru_rune)
-	x := mat32.DecodingContext(gru_rune, val)
+	gru_rune := mat.RuneConvert(gru_pri)
+	gru := mat.RuneToMatrix32(gru_rune)
+	x := mat.DecodingContext(gru_rune, val)
 
 	// accuracy
 	primary := layer.GRU_sigmoid(gru, "float64", value)
@@ -115,9 +115,11 @@ func (g *Generative) SecondaryContext(input string) float64 {
 }
 
 func (g *Generative) GRU_secondary(input matrix.Matrix32, value string) (float64, string) {
+	mat := matrix.RuneMatrix{}
+
 	// rune
 	GRU_2 := layer.GRU_rune_variable(value, input)
-	output := mat32.RuneToMatrix32(GRU_2)
+	output := mat.RuneToMatrix32(GRU_2)
 	val1 := g.GRU_decode(GRU_2, value)
 
 	// secondary
@@ -125,9 +127,9 @@ func (g *Generative) GRU_secondary(input matrix.Matrix32, value string) (float64
 	gru_sec := g.Gru_processed_secondary(output, value)
 
 	// processing runes
-	gru_rune := mat32.RuneConvert(gru_sec)
-	gru := mat32.RuneToMatrix32(gru_rune)
-	x := mat32.DecodingContext(gru_rune, val1)
+	gru_rune := mat.RuneConvert(gru_sec)
+	gru := mat.RuneToMatrix32(gru_rune)
+	x := mat.DecodingContext(gru_rune, val1)
 
 	// accuracy
 	secondary := layer.GRU_sigmoid(gru, "float64", value)
@@ -177,19 +179,21 @@ func (g *Generative) TrinaryContext(input string) float64 {
 }
 
 func (g *Generative) GRU_trinary(input matrix.Matrix32, value string) (float64, string) {
+	mat := matrix.RuneMatrix{}
+
 	// rune
 	GRU_3 := layer.GRU_rune_variable(value, input)
 	val2 := g.GRU_decode(GRU_3, value)
-	output := mat32.RuneToMatrix32(GRU_3)
+	output := mat.RuneToMatrix32(GRU_3)
 
 	// trinary
 	verbs := g.TrinaryContext(value)
 	gru_tri := g.Gru_processed_trinary(output, value)
 
 	// processing runes
-	gru_rune := mat32.RuneConvert(gru_tri)
-	gru := mat32.RuneToMatrix32(gru_rune)
-	x := mat32.DecodingContext(gru_rune, val2)
+	gru_rune := mat.RuneConvert(gru_tri)
+	gru := mat.RuneToMatrix32(gru_rune)
+	x := mat.DecodingContext(gru_rune, val2)
 
 	// accuracy
 	trinary := layer.GRU_sigmoid(gru, "float64", value)

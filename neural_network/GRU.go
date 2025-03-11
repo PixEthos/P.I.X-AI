@@ -167,7 +167,7 @@ func (l *Layers) GRU_Layers() mat.Matrix32 {
 
 // rune decoding
 func (l *Layers) GRU_rune_decode(input string, val mat.Rune) string {
-	Rune := mat.Matrix{}
+	Rune := mat.RuneMatrix{}
 
 	output := Rune.Decoding(val, input)
 	if len(output) != 0 {
@@ -179,7 +179,7 @@ func (l *Layers) GRU_rune_decode(input string, val mat.Rune) string {
 
 // rune processing
 func (l *Layers) GRU_rune_variable(input string, val mat.Matrix32) mat.Rune {
-	Rune := mat.Matrix{}
+	Rune := mat.RuneMatrix{}
 
 	output := Rune.Rune(val, input)
 	if output != nil {

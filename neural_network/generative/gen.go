@@ -45,7 +45,8 @@ var (
 	layer     = information.Layers{}    // GRU layering
 
 	// matrix handling
-	mat32 = matrix.Matrix{} // Matrix
+	mat32 = matrix.Matrix{}     // Matrix
+	Rune  = matrix.RuneMatrix{} // Rune
 )
 
 // struct for organization and global control
