@@ -131,36 +131,42 @@ func (m *RuneMatrix) Context(mat Rune, val []string, input string) string {
 	srt := nlp.Conversion{}
 
 	var output string
-	if srt.StringCheck(val, input) {
-		value := srt.ArrCheck(val, input)
 
-		input = value
+	found := srt.StringCheck(val, input)
+	if found {
+		if true {
+			value := srt.ArrCheck(val, input)
 
-		// input val
-		input_val := []byte(input)
+			input = value
 
-		// itteration
-		for i := range input_val {
-			for _, x := range input_val {
-				for l := range mat[i] {
-					output += string(rune(x))
+			// input val
+			input_val := []byte(input)
 
-					// empty check
-					if len(output) == 0 {
-						log.Println("Decoding failure", l)
-						break
+			// itteration
+			for i := range input_val {
+				for _, x := range input_val {
+					for l := range mat[i] {
+						output += string(rune(x))
+
+						// empty check
+						if len(output) == 0 {
+							log.Println("Decoding failure", l)
+							break
+						}
 					}
 				}
+
+				break
 			}
 
-			break
-		}
+			if len(value) != 0 {
+				return value
+			}
 
-		if len(value) != 0 {
-			return value
+			log.Println("Len: ", len(value))
+		} else if false {
+			log.Println("No matched values")
 		}
-
-		log.Println("Len: ", len(value))
 	}
 
 	return ""
@@ -169,7 +175,6 @@ func (m *RuneMatrix) Context(mat Rune, val []string, input string) string {
 // decoding the output
 func (m *RuneMatrix) DecodingContext(mat Rune, input string) string {
 	conv := nlp.Words{}
-
 	var output string
 
 	// GPE

@@ -30,7 +30,8 @@ type Predictive struct{}
 // Probability
 func (pre *Predictive) Probability(frequency, total float64) float64 {
 	probability := total / frequency
-	return 1.0 / (1.0 + math.Exp(-probability))
+	x := probability + total
+	return 1.0 / (1.0 + math.Exp(-x))
 }
 
 // Entropy

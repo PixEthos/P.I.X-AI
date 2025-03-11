@@ -16,6 +16,7 @@ package naturallanguageprocessing
 import (
 	"bufio"
 	"encoding/csv"
+	"log"
 	"os"
 	"slices"
 	"strings"
@@ -170,8 +171,8 @@ func (c *Conversion) ArrCheck(val []string, word string) string {
 		similar, _ := words[word]
 
 		if slices.Contains(similar, x) {
-			l := c.ArraytoString(similar)
-			return l
+			log.Println(x)
+			return x
 		}
 	}
 
