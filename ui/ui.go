@@ -140,7 +140,6 @@ func (ui *UserInterface) ApplicationWindow() {
 	// functions
 	ui.ApplicationInput()
 
-	sleezeball_corps := widget.NewLabel("Quite honestly, I hate the sleezy nature of a lot of AI companies. Taking good names, and ruining it for people.")
 	P_I_X := widget.NewLabel("P.I.X stands for: 'personally implemented 10' - not to be confused with others.")
 	limit := widget.NewLabel("The Input is limited to 128 (characters)")
 	description := widget.NewLabel("This is a passion project, still in early alpha. Just a basic match/predict as of now")
@@ -166,7 +165,6 @@ func (ui *UserInterface) ApplicationWindow() {
 	// container
 	content := container.NewVBox(
 		P_I_X,
-		sleezeball_corps,
 		description,
 		github,
 		limit,
