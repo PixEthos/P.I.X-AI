@@ -140,9 +140,10 @@ func (ui *UserInterface) ApplicationWindow() {
 	// functions
 	ui.ApplicationInput()
 
+	// description
 	P_I_X := widget.NewLabel("P.I.X stands for: 'personally implemented 10' - not to be confused with others.")
 	limit := widget.NewLabel("The Input is limited to 128 (characters)")
-	description := widget.NewLabel("This is a passion project, still in early alpha. Just a basic match/predict as of now")
+	description := widget.NewLabel("This is a passion project, still in early alpha.")
 	github := widget.NewLabel("Check here, for updates: https://github.com/PixEthos/Personally-Implmented-10-P.I.X--AI")
 
 	// input labels
