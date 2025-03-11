@@ -37,7 +37,7 @@ That should clear up the questions.
 How would you install and use it?
 1. Clone the repository:
 ```
-git clone https://github.com/PixEthos/PixAI.git
+git clone https://github.com/PixEthos/Personally-Implmented-10-P.I.X--AI.git
 ```
 2. Install Golang:
 Fedora:
