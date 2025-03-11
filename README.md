@@ -1,5 +1,8 @@
 ### TEST BRANTCH! ###
 
+NOTE: Had to change the name of my algorithm. Had no idea another service had the same name; so I elongated the meaning _OF_ what my algorithm's name stands for.
+AGAIN: I had _ZERO_ idea that a sleazy corpo was using the name before hand. I should've elongated the name before this.
+
 IF YOU INSTALL THIS:
 - There is a limit for the input values to be 255 in length (128 char), it's a hard limit at the moment.
 - Working on the Markov chains, but it still is fun to see what it is capable of doing.
