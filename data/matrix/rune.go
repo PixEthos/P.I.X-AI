@@ -127,128 +127,73 @@ func (m *RuneMatrix) Decoding(mat Rune, input string) string {
 	return ""
 }
 
+func (m *RuneMatrix) Context(mat Rune, val []string, input string) string {
+	srt := nlp.Conversion{}
+
+	var output string
+	if srt.StringCheck(val, input) {
+		value := srt.ArrCheck(val, input)
+
+		input = value
+
+		// input val
+		input_val := []byte(input)
+
+		// itteration
+		for i := range input_val {
+			for _, x := range input_val {
+				for l := range mat[i] {
+					output += string(rune(x))
+
+					// empty check
+					if len(output) == 0 {
+						log.Println("Decoding failure", l)
+						break
+					}
+				}
+			}
+
+			break
+		}
+
+		if len(value) != 0 {
+			return value
+		}
+
+		log.Println("Len: ", len(value))
+	}
+
+	return ""
+}
+
 // decoding the output
 func (m *RuneMatrix) DecodingContext(mat Rune, input string) string {
 	conv := nlp.Words{}
-	srt := nlp.Conversion{}
 
 	var output string
 
 	// GPE
-	if srt.StringCheck(conv.Words().GPE, input) {
-		gpe := srt.ArrCheck(conv.Words().GPE, input)
-
-		input = gpe
-
-		// input val
-		input_val := []byte(input)
-
-		// itteration
-		for i := range input_val {
-			for _, x := range input_val {
-				for l := range mat[i] {
-					output += string(rune(x))
-
-					// empty check
-					if len(output) == 0 {
-						log.Println("Decoding failure", l)
-						break
-					}
-				}
-			}
-
-			break
-		}
-
-		log.Println("GPE len: ", len(gpe))
+	val := m.Context(mat, conv.Words().GPE, input)
+	if len(val) != 0 {
+		output = val
 	}
 
 	// stopwords
-	if srt.StringCheck(conv.Words().Stopwords, input) {
-		stop := srt.ArrCheck(conv.Words().Stopwords, input)
-
-		input = stop
-
-		// input val
-		input_val := []byte(input)
-
-		// itteration
-		for i := range input_val {
-			for _, x := range input_val {
-				for l := range mat[i] {
-					output += string(rune(x))
-
-					// empty check
-					if len(output) == 0 {
-						log.Println("Decoding failure", l)
-						break
-					}
-				}
-			}
-
-			break
-		}
-
-		log.Println("Stopword len: ", len(stop))
+	val_1 := m.Context(mat, conv.Words().Stopwords, input)
+	if len(val_1) != 0 {
+		output = val_1
 	}
 
 	// verbs
-	if srt.StringCheck(conv.Words().Verbs, input) {
-		verb := srt.ArrCheck(conv.Words().Verbs, input)
-
-		input = verb
-
-		// input val
-		input_val := []byte(input)
-
-		// itteration
-		for i := range input_val {
-			for _, x := range input_val {
-				for l := range mat[i] {
-					output += string(rune(x))
-
-					// empty check
-					if len(output) == 0 {
-						log.Println("Decoding failure", l)
-						break
-					}
-				}
-			}
-
-			break
-		}
-
-		log.Println("Verb len: ", len(verb))
+	val_2 := m.Context(mat, conv.Words().Verbs, input)
+	if len(val_2) != 0 {
+		output = val_2
 	}
 
 	// nouns
-	if srt.StringCheck(conv.Words().Nouns, input) {
-		noun := srt.ArrCheck(conv.Words().Nouns, input)
-
-		input = noun
-
-		// input val
-		input_val := []byte(input)
-
-		// itteration
-		for i := range input_val {
-			for _, x := range input_val {
-				for l := range mat[i] {
-					output += string(rune(x))
-
-					// empty check
-					if len(output) == 0 {
-						log.Println("Decoding failure", l)
-						break
-					}
-				}
-			}
-
-			break
-		}
-
-		log.Println("Noun len: ", len(noun))
-
+	val_3 := m.Context(mat, conv.Words().Nouns, input)
+	if len(val_3) != 0 {
+		output = val_3
 	}
 
 	if len(output) != 0 {
