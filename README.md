@@ -1,3 +1,5 @@
+# Chatbot-WIP-Personally-Implemented-10-P-I-X
+
 ### TEST BRANTCH! ###
 
 NOTE: Had to change the name of my algorithm. Had no idea another service had the same name; so I elongated the meaning _OF_ what my algorithm's name stands for.
@@ -67,3 +69,6 @@ NOTE:
 This branch is just the 'development branch', there's no generative for the AI as of now.
 
 This is an early, early, early alpha release for those curious about what I had been working on.
+
+# LICENSE:
+[GPL-2](https://gitea.com/PixEthos/Chatbot-WIP-Personally-Implemented-10-P-I-X/src/branch/main/LICENSE)
